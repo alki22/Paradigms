@@ -1,3 +1,3 @@
 # Grupo 0: Paradigmas de Programación
 
-Aquí se suben los esqueletos de los laboratorios para forkear.
+Aquí se suben los esqueletos de los laboratorios.
