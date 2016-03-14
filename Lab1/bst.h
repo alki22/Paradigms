@@ -1,12 +1,13 @@
 #ifndef _BST_H
 #define _BST_H
+
 #include <stdio.h>
 #include <stdbool.h>
-#include "data.h"
-#include "index.h"
 #include "pair.h"
 #include "list.h"
+
 typedef struct _tree_node_t *bst_t;
+
 bst_t bst_empty(void);
 /*
 * Returns a newly created, empty binary search tree (BST).
