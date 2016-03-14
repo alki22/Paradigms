@@ -6,20 +6,21 @@
 #include <stdbool.h>
 #include <string.h>
 #include "pair.h"
+#include "word.h"
 
 struct _pair_t
 {
-	char *spa;
-	char *eng;
+	word_t fst;
+	word_t snd;
 };
 
 typedef struct _pair_t *pair_t;
 
-pair_t pair_from_word(char *spa, char *eng) {
+pair_t pair_from_word(word_t fst, word_t spa) {
 	pair_t pair = NULL;
 	pair = calloc(1, sizeof(struct _pair_t));
+	pair->fst = fst;
 	pair->spa = spa;
-	pair->eng = eng;
 	return pair;
 }
 	
@@ -30,21 +31,21 @@ pair_t pair_destroy(pair_t pair)
 	return pair;
 }
 
-char *pair_fst(pair_t pair)
+word_t pair_fst(pair_t pair)
 {
-	return pair->spa;
+	return pair->fst;
 }
 
-char *pair_snd(pair_t pair)
+word_t pair_snd(pair_t pair)
 {
-	return pair->eng;
+	return pair->spa;
 }
 
 bool pair_is_equal(pair_t pair, pair_t other)
 {
 	bool result = true;
-	result = (strcmp(pair->spa, other->spa) == 0);
-	result = result && (strcmp(pair->eng, other->eng) == 0);
+	result = (word_compare(pair->fst, other->fst) == 0);
+	result = result && (word_compare(pair->spa, other->spa) == 0);
 	return result;
 }
 

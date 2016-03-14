@@ -2,13 +2,11 @@
 #define _PAIR_H
 
 #include <stdbool.h>
-#include "index.h"
-#include "data.h"
-
+#include "word.h"
 
 typedef struct _pair_t *pair_t;
 
-pair_t pair_from_word(char *spa, char *eng);
+pair_t pair_from_word(word_t spa, word_t eng);
 /*
  * Build a new pair from the word.
  *
@@ -21,12 +19,12 @@ pair_t pair_destroy(pair_t pair);
  * Free the memory allocated by the given 'pair'. Set 'pair' to NULL.
  */
 
-index_t pair_spa(pair_t pair);
+index_t pair_fst(pair_t pair);
 /*
  * Return a reference to the first pair element.
  */
 
-data_t pair_eng(pair_t pair);
+data_t pair_snd(pair_t pair);
 /*
  * Return a reference to the second pair element.
  */
