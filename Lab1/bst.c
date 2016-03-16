@@ -110,7 +110,7 @@ word_t bst_search(bst_t bst, word_t word) {
 
 bst_t bst_add(bst_t bst, word_t spa, word_t eng, bool reverse) {
     unsigned int prev_length = bst_length(bst);
-    
+
     bst_t add = calloc(1,sizeof(struct _tree_node_t));
 
     if (reverse) add->pair = pair_from_word(eng, spa);
@@ -120,7 +120,7 @@ bst_t bst_add(bst_t bst, word_t spa, word_t eng, bool reverse) {
 
     bst_t prevtmp = NULL;
     bst_t tmp = bst;
-    
+
     if (bst != NULL) {
         while (tmp != NULL ) {
             if (word_compare(spa, pair_fst(tmp->pair)) < 0) {
@@ -131,10 +131,10 @@ bst_t bst_add(bst_t bst, word_t spa, word_t eng, bool reverse) {
                 tmp = tmp->right;
             }
         }
-        
+
         if (word_compare(spa, pair_fst(prevtmp->pair)) < 0) prevtmp->left = add;
         else prevtmp->right = add;
-    
+
     } else bst = add;
 
     return bst;
@@ -182,7 +182,7 @@ bst_t bst_remove(bst_t bst, word_t word) {
         } else
             flag = true;
     }
-    
+
     if (flag && prev_tmp != NULL) {
         if (tmp->left == NULL) {
             bst_t aux_right = tmp->right;
@@ -200,7 +200,7 @@ bst_t bst_remove(bst_t bst, word_t word) {
         free(bst);
         bst = NULL;
     }
-    
+
     if (flag) {
         assert(prev_length - 1 == bst_length(bst));
     } else {
