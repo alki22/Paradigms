@@ -1,20 +1,11 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 //Standard libraries included
 #include "word.h"
 #include "bst.h"
 //User defined libraries included
-
-char *strcat(char *dest, const char *src, unsigned int offset) {
-    size_t i,j;
-    for (i = 0; dest[i] != '\0'; i++)
-        ;
-    for (j = offset; src[j] != '\0'; j++)
-        dest[i+j] = src[j];
-    dest[i+j] = '\0';
-    return dest;
-}
 
 unsigned int count_lines(char *path) {
     FILE *fp = fopen(filename,"r");
@@ -44,7 +35,7 @@ void dict_trans_load(bst_t dict, char *path, int reverse) {
 
     word_t spa;
     word_t eng;
-    unsigned int i;
+    unsigned int i, j;
 
     fp = fopen(path, "r");
     if (fp = NULL) {
@@ -53,15 +44,19 @@ void dict_trans_load(bst_t dict, char *path, int reverse) {
     }
 
     while (read = getline(&line, &len, fp)) != -1) {
-        spa = NULL;
-        eng = NULL;
+        spa = malloc(len-1*sizeof(char));
+        eng = malloc(len-1*sizeof(char));
         i = 0;
+        j = 0;
         for (; i < len; ++i) {
             char c = line[i];
             if (isalpha(c)) {
-                strcat(spa, char *(c), 0);
+                spa[strlen(spa)] = c;
             } else {
-                strcat(eng, line, i+1);
+                for(i = i+1; i < len; ++i) {
+                    eng[j] = line[i];
+                    ++j;
+                }
                 break;
             }
         }

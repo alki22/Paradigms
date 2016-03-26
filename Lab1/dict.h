@@ -5,7 +5,7 @@
 #include "word.h"
 #include "bst.h"
 
-char *strcat(char *dest, const char *src, unsigned int offset);
+char *strcat_(char *dest, const char *src, unsigned int offs);
 /*
  * Concatenates the source string into the destiny string with the given offset.
  */
