@@ -7,22 +7,69 @@
 // User defined libraries included
 #include "dict.h"
 
-    isupper
-    islower
-    isalpha
-    ispunct
+word_t menu(bst_t dict_trans, char **dict_ignore, word_t current) {
+    printf("No hay traducción para la palabra: %s\n\nIgnorar (i) -
+           Ignorar Todas (h) - Traducir como (t) - Traducir siempre como (s)",
+           current);
 
-int translator(char *path, bst_t dict_trans, char **dict_ignore) {
-    FILE *fp = fopen(path, "r");
+    char c;
+    scanf("%c", c);
+    switch (c) {
+        case 'i':
+            result = current;
+        case 'h':
+            result = current;
+            dict_ignore_add(current); // To implement
+        case 't':
+            printf("Traducir %s como: ", current);
+            scanf("I%s", result);
+        case 's':
+            printf("Traducir %s como: ", current);
+            scanf("%s", result);
+            dict_trans_add(dict_trans, current, result);
+        default:
+            printf("Invalid option");
+            exit(EXIT_FAILURE);
+    }
+    return result;
+}
+
+int translator(char *path, char *output, bst_t dict_trans, char **dict_ignore) {
+    FILE *fp_in = fopen(path, "r");
+    FILE *fp_out = fopen(output, "w");
+
     if (fp == NULL) {
         printf("Invalid file\n");
         return -1; // Error archivo invalido
     }
 
-    word_t current;
+    // Design choice
+    word_t current[100]; // Fijarse si neceitamos hacer ralloc
+    word_t translated = NULL;
+    unsigned int curr_elem;
+
     char c;
-    while ((c = fgetc(fp)) != EOF) {
-        if (isalpha())
+    while ((c = fgetc(fp_in)) != EOF) {
+        curr_elem = 0;
+        if (isalpha(c)) {
+            current[++curr_elem] = c;
+            current[curr_elem] = '\0';
+        } else {
+            translated = bst_search(dict_trans, current);
+            if (translated == NULL) {
+                // Menu para ver que hacemos
+            } else {
+                fprintf(fp_out, translated);
+            }
+
+            if (c != '¿') {
+                char str[2];
+                str[0] = c;
+                str[1] = '\0'
+                fprintf(fp_out, str);
+            }
+
+        }
     }
 }
 
@@ -71,9 +118,6 @@ int main(argc, char *argv[]) {
     // Tenemos ya todo lo que necesitamos para empezar.
     // En caso de tener diccionarios deberiamos cargarlos.
     dict_trans = bst_empty();
-    dict_trans_load(dict, dvalue, rflag);
+    dict_trans = dict_trans_load(dict, dvalue, rflag);
     char **dict_ignore = dict_ignore_load(gvalue);
 }
-
-./translator -i texto.txt -d diccionario -g ignorados -o output.txt:
-    
