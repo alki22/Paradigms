@@ -98,4 +98,3 @@ char ** dict_ignore_load(path) {
 
     return dict_ignore;
 }
-
