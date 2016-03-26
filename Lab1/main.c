@@ -36,7 +36,7 @@ unsigned int count_lines(char *path) {
     return lines;
 }
 
-void dict__trans_load(bst_t dict, char *path, int reverse) {
+void dict_trans_load(bst_t dict, char *path, int reverse) {
     FILE *fp;
     char *line = NULL;
     size_t len = 0;
