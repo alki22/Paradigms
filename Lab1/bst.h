@@ -41,7 +41,7 @@ word_t bst_search(bst_t bst, word_t word);
 * using it.
 */
 
-bst_t bst_add(bst_t bst, word_t spa, word_t eng, int reverse);
+bst_t bst_add(bst_t bst, word_t word1, word_t word2);
 /*
 * Returns the given ’bst’ with the pair (’index’, ’data’) added to it.
 *

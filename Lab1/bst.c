@@ -108,13 +108,12 @@ word_t bst_search(bst_t bst, word_t word) {
     return result;
 }
 
-bst_t bst_add(bst_t bst, word_t spa, word_t eng, bool reverse) {
+bst_t bst_add(bst_t bst, word_t word1, word_t word2) {
     unsigned int prev_length = bst_length(bst);
 
     bst_t add = calloc(1,sizeof(struct _tree_node_t));
 
-    if (reverse) add->pair = pair_from_word(eng, spa);
-    else add->pair = pair_from_word(spa, eng);
+    add->pair = pair_from_word(word1, word2);
     add->right = NULL;
     add->left = NULL;
 
@@ -123,7 +122,7 @@ bst_t bst_add(bst_t bst, word_t spa, word_t eng, bool reverse) {
 
     if (bst != NULL) {
         while (tmp != NULL ) {
-            if (word_compare(spa, pair_fst(tmp->pair)) < 0) {
+            if (word_compare(word1, pair_fst(tmp->pair)) < 0) {
                 prevtmp = tmp;
                 tmp = tmp->left;
             } else {
@@ -132,7 +131,7 @@ bst_t bst_add(bst_t bst, word_t spa, word_t eng, bool reverse) {
             }
         }
 
-        if (word_compare(spa, pair_fst(prevtmp->pair)) < 0) prevtmp->left = add;
+        if (word_compare(word1, pair_fst(prevtmp->pair)) < 0) prevtmp->left = add;
         else prevtmp->right = add;
 
     } else bst = add;
