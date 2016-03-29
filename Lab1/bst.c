@@ -13,7 +13,7 @@ struct _tree_node_t  {
     pair_t pair;
     struct _tree_node_t *left;
     struct _tree_node_t *right;
-};
+} bst_t;
 
 bst_t bst_empty(void) {
     bst_t bst = NULL;

@@ -39,12 +39,17 @@ unsigned int count_lines(char *path) {
 
 struct dict_trans dict_trans_empty(void) {
     struct dict_trans dict = malloc(1*sizeof(struct dict_trans));
-    dict->tree = NULL;
+    dict->tree = bst_empty();
     dict->length = 0;
     return dict;
 }
 
-bst_t dict_trans_load(bst_t dict, char *path, int reverse) {
+struct dict_trans dict_trans_add(struct dict_trans dict, word_t word1, word_t word2) {
+    dict = dict_trans_add_add(dict, word1, word2);
+    return dict;
+}
+
+struct dict_trans dict_trans_load(struct dict_trans dict, char *path, int reverse) {
     FILE *fp;
     char *line = NULL;
     size_t len = 0;
@@ -78,9 +83,9 @@ bst_t dict_trans_load(bst_t dict, char *path, int reverse) {
             }
         }
         if (reverse)
-            dict = bst_add(dict, eng, spa);
+            dict = dict_trans_add(dict, eng, spa);
         else
-            dict = bst_add(dict, spa, eng);
+            dict = dict_trans_add(dict, spa, eng);
 
         free(spa);
         free(eng);
@@ -93,15 +98,23 @@ bst_t dict_trans_load(bst_t dict, char *path, int reverse) {
 }
 
 
-bst_t dict_trans_add(bst_t dict, word_t word1, word_t word2) {
-    dict = bst_add(dict, word1, word2);
-    return dict;
-}
-
 struct dict_ignore dict_ignore_empty(void) {
     struct dict_ignore dict = malloc(1*sizeof(struct dict_ignore));
     dict->array = NULL;
     dict->length = 0;
+    return dict;
+}
+
+struct dict_ignore dict_ignore_add(struct dict_ignore dict, word_t word) {
+    dict->length++;
+    word_t * new = malloc(dict->length*sizeof(char *));
+    unsigned int i;
+    for(i = 0; i < dict->length - 1; ++i)
+        new[i] = dict->array[i];
+    new[i] = word;
+
+    free(dict->array);
+    dict->array = new;
     return dict;
 }
 
@@ -126,18 +139,5 @@ struct dict_ignore dict_ignore_load(char *path, struct dict_ignore dict) {
         ++i;
     }
 
-    return dict;
-}
-
-struct dict_ignore dict_ignore_add(struct dict_ignore dict, word_t word) {
-    dict->length++;
-    word_t * new = malloc(dict->length*sizeof(char *));
-    unsigned int i;
-    for(i = 0; i < dict->length - 1; ++i)
-        new[i] = dict->array[i];
-    new[i] = word;
-
-    free(dict->array);
-    dict->array = new;
     return dict;
 }
