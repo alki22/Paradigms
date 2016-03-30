@@ -231,4 +231,23 @@ bst_t bst_copy(bst_t bst) {
     return copy;
 }
 
-void bst_to_list(bst_t bst);
+pair_t *bst_to_array(bst_t bst) {
+    pair_t *result = malloc(bst_length(bst)*pair_size());
+    stack_t stack = stack_empty();
+    bst_t current = bst;
+    unsigned int i = 0;
+    while (!stack_is_empty(stack) || current != NULL) {
+        if (current != NULL) {
+            stack = stack_push(stack, current);
+            current = current->left;
+        } else {
+            current = stack_top(stack);
+            stack = stack_pop(stack);
+            result[i] = pair_copy(current->pair);
+            ++i;
+            current = current->right;
+        }
+    }
+    stack = stack_destroy(stack);
+    return result;
+}

@@ -1,5 +1,8 @@
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 // Standard libraries included
+#include "dict_helpers.h"
 
 unsigned int count_lines(char *path) {
     FILE *fp = fopen(path,"r");
@@ -21,10 +24,18 @@ unsigned int count_lines(char *path) {
     return lines;
 }
 
+void swap(char **array, unsigned int i, unsigned int j) {
+    if (i != j) {
+        char *temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
 void insert(char **array, unsigned int i) {
     unsigned int j = i;
     while (j > 0) {
-        if (array[j] < array[j-1]) {
+        if (strcmp(array[j], array[j-1]) < 0) {
             swap(array, j, j - 1);
             j--;
         } else

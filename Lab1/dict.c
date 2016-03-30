@@ -3,35 +3,41 @@
 #include <stdlib.h>
 #include <string.h>
 // Standard libraries included
-#include "word.h"
 #include "bst.h"
+#include "dict.h"
 #include "dict_helpers.h"
+#include "word.h"
 // User defined libraries included
 
-struct dict_trans {
+struct _dict_trans_t {
     struct _tree_node_t *tree;
     unsigned int length;
+    bool reverse;
 };
 
-struct dict_ignore {
+struct _dict_ignore_t {
     word_t *array;
     unsigned int length;
 };
 
-struct dict_trans* dict_trans_empty(void) {
-    struct dict_trans *dict = (struct dict_trans*)malloc(1*sizeof(struct dict_trans));
+//typedef struct _dict_trans_t *dict_trans_t;
+//typedef struct _dict_ignore_t *dict_ignore_t;
+
+dict_trans_t dict_trans_empty(bool reverse) {
+    dict_trans_t dict = malloc(1*sizeof(struct _dict_trans_t));
     dict->tree = NULL;
     dict->length = 0;
+    dict->reverse = reverse;
     return dict;
 }
 
-struct dict_trans *dict_trans_add(struct dict_trans *dict, word_t word1, word_t word2) {
+dict_trans_t dict_trans_add(dict_trans_t dict, word_t word1, word_t word2) {
     dict->tree = bst_add(dict->tree, word1, word2);
     ++dict->length;
     return dict;
 }
 
-struct dict_trans *dict_trans_load(struct dict_trans *dict, char *path, int reverse) {
+dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
     FILE *fp;
     char *line = NULL;
     size_t len = 0;
@@ -48,8 +54,8 @@ struct dict_trans *dict_trans_load(struct dict_trans *dict, char *path, int reve
     }
 
     while ((read = getline(&line, &len, fp)) != -1) {
-        spa = (char *)malloc(len-1*sizeof(char));
-        eng = (char *)malloc(len-1*sizeof(char));
+        spa = malloc(len-1*sizeof(char));
+        eng = malloc(len-1*sizeof(char));
         i = 0;
         j = 0;
         for (; i < len; ++i) {
@@ -64,8 +70,8 @@ struct dict_trans *dict_trans_load(struct dict_trans *dict, char *path, int reve
                 break;
             }
         }
-        if (reverse)
-            dict = dict_trans_add(dict, eng, spa);
+        if (dict->reverse)
+            dict = dict_trans_add(dict, eng, spa); // podriamos cargar en un array
         else
             dict = dict_trans_add(dict, spa, eng);
 
@@ -82,23 +88,49 @@ struct dict_trans *dict_trans_load(struct dict_trans *dict, char *path, int reve
     return dict;
 }
 
-struct dict_trans *dict_trans_destroy(struct dict_trans *dict) {
+word_t dict_trans_search(dict_trans_t dict, word_t word) {
+    return bst_search(dict->tree, word);
+}
+
+dict_trans_t dict_trans_destroy(dict_trans_t dict) {
     dict->tree = bst_destroy(dict->tree);
     free(dict);
     dict = NULL;
     return dict;
 }
 
-struct dict_ignore *dict_ignore_empty(void) {
-    struct dict_ignore *dict = (struct dict_ignore *)malloc(1*sizeof(struct dict_ignore));
+void dict_trans_save(dict_trans_t dict, char *path) {
+    // falta pensar que pasa cuando reverse = 1
+    FILE *fp;
+    unsigned int i;
+
+    pair_t *array = bst_to_array(dict->tree);
+
+    fp = fopen(path, "w");
+    if (fp == NULL) {
+        printf("Invalid file\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for (i = 0; i < dict->length; ++i) {
+        fprintf(fp, "%s", pair_fst(array[i]));
+        fprintf(fp, ",");
+        fprintf(fp, "%s\n", pair_snd(array[i]));
+    }
+
+    fclose(fp);
+}
+
+dict_ignore_t dict_ignore_empty(void) {
+    dict_ignore_t dict = malloc(1*sizeof(struct _dict_ignore_t));
     dict->array = NULL;
     dict->length = 0;
     return dict;
 }
 
-struct dict_ignore *dict_ignore_add(struct dict_ignore *dict, word_t word) {
+dict_ignore_t dict_ignore_add(dict_ignore_t dict, word_t word) {
     dict->length++;
-    word_t *new = (char **)malloc(dict->length*sizeof(char *));
+    word_t *new = malloc(dict->length*sizeof(char *));
     unsigned int i;
     for(i = 0; i < dict->length - 1; ++i)
         new[i] = dict->array[i];
@@ -110,7 +142,7 @@ struct dict_ignore *dict_ignore_add(struct dict_ignore *dict, word_t word) {
     return dict;
 }
 
-struct dict_ignore *dict_ignore_load(char *path, struct dict_ignore *dict) {
+dict_ignore_t dict_ignore_load(char *path, dict_ignore_t dict) {
     unsigned int lines = count_lines(path);
     if (lines == 0) {
         printf("Invalid file\n");
@@ -134,11 +166,22 @@ struct dict_ignore *dict_ignore_load(char *path, struct dict_ignore *dict) {
     return dict;
 }
 
-void dict_ignore_sort(struct dict_ignore *dict) {
+
+void dict_ignore_sort(dict_ignore_t dict) {
     insertion_sort(dict->array, dict->length);
 }
 
-struct dict_ignore *dict_ignore_destroy(struct dict_ignore *dict) {
+bool dict_ignore_search(dict_ignore_t dict, word_t word) {
+    dict_ignore_sort(dict);
+    unsigned int i;
+    for (i = 0; i < dict->length; ++i) {
+        if (!strcmp(word, dict->array[i]))
+            return 1;
+    }
+    return 0;
+}
+
+dict_ignore_t dict_ignore_destroy(dict_ignore_t dict) {
     free(dict->array);
     dict->array = NULL;
     free(dict);
@@ -146,10 +189,10 @@ struct dict_ignore *dict_ignore_destroy(struct dict_ignore *dict) {
     return dict;
 }
 
-void dict_ignore_save(char *path, struct dict_ignore* dict) {
+void dict_ignore_save(char *path, dict_ignore_t dict) {
     // Pre: dictionary is sorted alphabetically
     FILE *fp;
-    unsigned int i, j;
+    unsigned int i;
 
     fp = fopen(path, "w");
     if (fp == NULL) {
@@ -157,7 +200,7 @@ void dict_ignore_save(char *path, struct dict_ignore* dict) {
         exit(EXIT_FAILURE);
     }
 
-    for (i = 0; i < dict->legth; ++i) {
+    for (i = 0; i < dict->length; ++i) {
         fprintf(fp, "%s\n", dict->array[i]);
     }
 

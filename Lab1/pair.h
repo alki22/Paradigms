@@ -39,4 +39,6 @@ bool pair_is_equal(pair_t pair, pair_t other);
  * Return whether 'pair' is equal to 'other'.
  */
 
+unsigned int pair_size(void);
+
 #endif

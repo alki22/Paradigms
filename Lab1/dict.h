@@ -10,35 +10,51 @@
 #include "dict_helpers.h"
 // User defined libraries included
 
-struct dict_trans *dict_trans_empty(void);
+typedef struct _dict_trans_t *dict_trans_t;
+typedef struct _dict_ignore_t *dict_ignore_t;
+
+dict_trans_t dict_trans_empty(bool reverse);
 /*
  * Create empty "translation dictionary"
  */
 
-struct dict_trans *dict_trans_add(struct dict_trans *dict, word_t word1, word_t word2);
+dict_trans_t dict_trans_add(dict_trans_t dict, word_t word1, word_t word2);
 /*
  * Adds pair of words to specified dictionary
  */
 
-struct dict_trans *dict_trans_load(struct dict_trans *dict, char *path, int reverse);
+dict_trans_t dict_trans_load(dict_trans_t dict, char *path);
 /*
  * Loads the translation dictionary into the bst structure
  */
 
-struct dict_ignore *dict_ignore_empty(void);
+word_t dict_trans_search(dict_trans_t dict, word_t word);
+
+dict_trans_t dict_trans_destroy(dict_trans_t dict);
+
+void dict_trans_save(dict_trans_t dict, char *path);
+
+dict_ignore_t dict_ignore_empty(void);
 /*
  * Create empty "ignore dictionary"
  */
 
-struct dict_ignore *dict_ignore_add(struct dict_ignore *dict, word_t word);
+dict_ignore_t dict_ignore_add(dict_ignore_t dict, word_t word);
 /*
  * Adds word to specified dictionary
  */
 
-struct dict_ignore *dict_ignore_load(char *path, struct dict_ignore dict);
+dict_ignore_t dict_ignore_load(char *path, dict_ignore_t dict);
 /*
  * Loads the ignored words list into an array of strings
  */
 
-#endif
+void dict_ignore_sort(dict_ignore_t dict);
 
+bool dict_ignore_search(dict_ignore_t dict, word_t word);
+
+dict_ignore_t dict_ignore_destroy(dict_ignore_t dict);
+
+void dict_ignore_save(char *path, dict_ignore_t dict);
+
+#endif

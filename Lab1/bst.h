@@ -80,7 +80,7 @@ bst_t bst_copy(bst_t bst);
 * POST: the result is an exact copy of ’bst’.
 * In particular, bst_is_equal(result, bst) holds.
 */
-void bst_print(bst_t bst);
+pair_t *bst_to_array(bst_t bst);
 /*
 * This function appends to the given ’list’ a copy of all the
 * elements of the ’bst’ in ascending order.

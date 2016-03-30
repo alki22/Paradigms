@@ -14,4 +14,6 @@ int word_compare(word_t word, word_t other);
 
 unsigned int word_length(word_t word);
 
+word_t word_copy(word_t word);
+
 #endif
