@@ -19,12 +19,17 @@ pair_t pair_destroy(pair_t pair);
  * Free the memory allocated by the given 'pair'. Set 'pair' to NULL.
  */
 
-index_t pair_fst(pair_t pair);
+pair_t pair_copy(pair_t pair);
+/*
+ * Copy the pair given.
+ */
+
+word_t pair_fst(pair_t pair);
 /*
  * Return a reference to the first pair element.
  */
 
-data_t pair_snd(pair_t pair);
+word_t pair_snd(pair_t pair);
 /*
  * Return a reference to the second pair element.
  */

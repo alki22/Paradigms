@@ -1,6 +1,7 @@
 // Standard libraries included
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <ctype.h>
 
@@ -13,19 +14,22 @@ word_t menu(bst_t dict_trans, char **dict_ignore, word_t current) {
            current);
 
     char c;
+    char *result;
     scanf("%c", c);
     switch (c) {
         case 'i':
             result = current;
         case 'h':
             result = current;
+            // search
             dict_ignore_add(current); // To implement
         case 't':
             printf("Traducir %s como: ", current);
-            scanf("I%s", result);
+            scanf("%s", result);
         case 's':
             printf("Traducir %s como: ", current);
             scanf("%s", result);
+            // search
             dict_trans_add(dict_trans, current, result);
         default:
             printf("Invalid option");

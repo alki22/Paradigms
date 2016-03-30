@@ -3,21 +3,23 @@
 #include <stdbool.h>
 #include <assert.h>
 //Standard libraries included
+#include "bst.h"
 #include "pair.h"
-#include "word.h"
 #include "stack.h"
-#include "list.h"
+#include "word.h"
 //User defined libraries included
 
 struct _tree_node_t  {
-    pair_t pair;
+    struct _pair_t *pair;
     struct _tree_node_t *left;
     struct _tree_node_t *right;
-} bst_t;
+};
+
+typedef struct _tree_node_t *bst_t;
 
 bst_t bst_empty(void) {
     bst_t bst = NULL;
-    return (bst);
+    return bst;
 }
 
 bst_t bst_destroy(bst_t bst) {
@@ -99,7 +101,7 @@ word_t bst_search(bst_t bst, word_t word) {
     bst_t tmp = bst;
 
     while (tmp != NULL && (word_compare(word, pair_fst(tmp->pair)) != 0)) {
-        if (word_compare(spa, pair_fst(tmp->pair)) < 0)
+        if (word_compare(word, pair_fst(tmp->pair)) < 0)
             tmp = tmp->left;
         else
             tmp = tmp->right;
@@ -221,7 +223,7 @@ bst_t bst_copy(bst_t bst) {
             tmp = stack_top(stack);
             stack = stack_pop(stack);
             copy = bst_add(copy, pair_fst(tmp->pair),
-                           pair_snd(tmp->pair), 0);
+                           pair_snd(tmp->pair));
             tmp = tmp->right;
         }
     }
@@ -229,20 +231,4 @@ bst_t bst_copy(bst_t bst) {
     return copy;
 }
 
-list_t bst_to_list(bst_t bst, list_t list) {
-    stack_t stack = stack_empty();
-    bst_t current = bst;
-    while (!stack_is_empty(stack) || current != NULL) {
-        if (current != NULL) {
-            stack = stack_push(stack, current);
-            current = current->left;
-        } else {
-            current = stack_top(stack);
-            stack = stack_pop(stack);
-            list = list_append(list, pair_fst(current->pair), pair_snd(current->pair));
-            current = current->right;
-        }
-    }
-    stack = stack_destroy(stack);
-    return list;
-}
+void bst_to_list(bst_t bst);

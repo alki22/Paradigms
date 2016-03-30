@@ -1,10 +1,9 @@
 #ifndef _BST_H
 #define _BST_H
 
-#include <stdio.h>
 #include <stdbool.h>
 #include "pair.h"
-#include "list.h"
+#include "word.h"
 
 typedef struct _tree_node_t *bst_t;
 
@@ -81,7 +80,7 @@ bst_t bst_copy(bst_t bst);
 * POST: the result is an exact copy of ’bst’.
 * In particular, bst_is_equal(result, bst) holds.
 */
-list_t bst_to_list(bst_t bst, list_t list);
+void bst_print(bst_t bst);
 /*
 * This function appends to the given ’list’ a copy of all the
 * elements of the ’bst’ in ascending order.
@@ -97,4 +96,5 @@ list_t bst_to_list(bst_t bst, list_t list);
 * is, depending on the implementation, the pointers must point either
 * to ’NULL’ or to a well-formed structure. It is guaranteed that the
 * pointers remain valid after the execution of the functions. */
+
 #endif
