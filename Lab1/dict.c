@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//Standard libraries included
+// Standard libraries included
 #include "word.h"
 #include "bst.h"
 #include "dict_helpers.h"
-//User defined libraries included
+// User defined libraries included
 
 struct dict_trans {
     struct _tree_node_t *tree;
