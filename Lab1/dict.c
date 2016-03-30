@@ -5,6 +5,7 @@
 //Standard libraries included
 #include "word.h"
 #include "bst.h"
+#include "dict_helpers.h"
 //User defined libraries included
 
 struct dict_trans {
@@ -16,26 +17,6 @@ struct dict_ignore {
     word_t *array;
     unsigned int length;
 };
-
-unsigned int count_lines(char *path) {
-    FILE *fp = fopen(path,"r");
-    int ch = 0;
-    unsigned int lines = 0;
-
-    if (fp == NULL)
-        return 0;
-
-    while (!feof(fp)) {
-        ch = fgetc(fp);
-        if (ch == '\n') {
-            lines++;
-        }
-    }
-
-    fclose(fp);
-
-    return lines;
-}
 
 struct dict_trans* dict_trans_empty(void) {
     struct dict_trans *dict = (struct dict_trans*)malloc(1*sizeof(struct dict_trans));
@@ -153,7 +134,9 @@ struct dict_ignore *dict_ignore_load(char *path, struct dict_ignore *dict) {
     return dict;
 }
 
-struct dict_ignore *dict_ignore_sort(struct dict_ignore *dict);
+void dict_ignore_sort(struct dict_ignore *dict) {
+    insertion_sort(dict->array, dict->length);
+}
 
 struct dict_ignore *dict_ignore_destroy(struct dict_ignore *dict) {
     free(dict->array);

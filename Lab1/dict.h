@@ -1,14 +1,14 @@
+#ifndef _DICT_H
+#define _DICT_H
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+// Standard libraries included
 #include "word.h"
 #include "bst.h"
-
-unsigned int count_lines(char *path);
-/*
- * Returns the number of lines in the file
- */
+#include "dict_helpers.h"
+// User defined libraries included
 
 struct dict_trans *dict_trans_empty(void);
 /*
@@ -39,3 +39,6 @@ struct dict_ignore *dict_ignore_load(char *path, struct dict_ignore dict);
 /*
  * Loads the ignored words list into an array of strings
  */
+
+#endif
+
