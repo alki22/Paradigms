@@ -6,6 +6,7 @@
 #include "bst.h"
 #include "dict.h"
 #include "dict_helpers.h"
+#include "helpers.h"
 #include "word.h"
 // User defined libraries included
 
@@ -40,8 +41,6 @@ dict_trans_t dict_trans_add(dict_trans_t dict, word_t word1, word_t word2) {
 dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
     FILE *fp;
     char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
 
     word_t spa;
     word_t eng;
@@ -52,18 +51,23 @@ dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
         printf("Invalid file\n");
         exit(EXIT_FAILURE);
     }
-
-    while ((read = getline(&line, &len, fp)) != -1) {
-        spa = malloc(len-1*sizeof(char));
-        eng = malloc(len-1*sizeof(char));
+    printf("dict.c: linea 54\n");
+    while (true) {
+        printf("dict.c: linea 56\n");
+        line = readline(fp);
+        printf("dict.c: linea 58\n");
+        spa = malloc(strlen(line)-1*sizeof(char));
+        eng = malloc(strlen(line)-1*sizeof(char));
         i = 0;
         j = 0;
-        for (; i < len; ++i) {
+        for (; i < strlen(line); ++i) {
+            printf("dict.c: linea 62\n");
             char c = line[i];
+            printf("dict.c: linea 64, c = %c\n", c);
             if (isalpha(c)) {
                 spa[strlen(spa)] = c;
             } else {
-                for(i = i+1; i < len; ++i) {
+                for(i = i+1; i < strlen(line); ++i) {
                     eng[j] = line[i];
                     ++j;
                 }

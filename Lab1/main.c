@@ -7,8 +7,9 @@
 
 // User defined libraries included
 #include "dict.h"
+#include "helpers.h"
 
-word_t menu(struct dict_trans *dict_trans, struct dict_ignore *dict_ignore, word_t current) {
+word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t current) {
     printf("No hay traducción para la palabra: %s\n\n"
            "\tIgnorar (i) - Ignorar Todas (h) - Traducir como (t) - Traducir siempre como (s)",
            current);
@@ -36,7 +37,19 @@ word_t menu(struct dict_trans *dict_trans, struct dict_ignore *dict_ignore, word
     return result;
 }
 
-int translator(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t dict_ignore) {
+word_t translate_word(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
+    word_t translated;
+    translated = dict_trans_search(dict_trans, word);
+    if (translated == NULL) {
+        if (!dict_ignore_search(dict_ignore, word)) {
+            translated = menu(dict_trans, dict_ignore, word);
+        } else {
+            translated = word;
+        }
+    }
+}
+
+int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t dict_ignore) {
     FILE *fp_in = fopen(path, "r");
     FILE *fp_out = fopen(output, "w");
 
@@ -45,35 +58,44 @@ int translator(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t 
         exit(EXIT_FAILURE);
     }
 
-    // Design choice
-    word_t current[100]; // Fijarse si neceitamos hacer ralloc
-    word_t translated = NULL;
-    unsigned int curr_elem;
-
-    char c;
-    while ((c = fgetc(fp_in)) != EOF) {
-        curr_elem = 0;
-        if (isalpha(c)) {
-            current[++curr_elem] = (char)c;
-            current[curr_elem] = '\0';
-        } else {
-
-            translated = dict_trans_search(dict_trans->tree, current);
-            if (translated == NULL){
-                    if (!dict_ignore_search(dict_ignore->array, current)) {
-                        translated = menu(dict_trans, dict_ignore);
-                    }
+    word_t word, word_p, trans;
+    char *line, *line_iso;
+    size_t len;
+    while (true) {
+        line = readline(fp_in);
+        if (line == NULL)
+            break;
+        
+        len = strlen(line);
+        line_iso = malloc(len*sizeof(char));
+        utf8_to_latin9(line_iso, line, len);
+        word = strtok(line_iso, " ");
+        
+        while (word != NULL) {
+            word_t current = malloc(strlen(word)*sizeof(char));
+            unsigned int i, j = 0, took_letter = 0;
+            
+            for (i = 0; i < strlen(word); ++i) {
+                if (isalnum(word[i])) {
+                    current[j] = word[i];
+                    ++j;
+                    current[j] = '\0';
+                } else if (!took_letter) {
+                    fprintf(fp_out, "%c", word[i]);
+                } else {
+                    trans = translate_word(dict_trans, dict_ignore, current);
+                    fprintf(fp_out, "%s%c", trans, word[i]);
+                }
             }
-            fprintf(fp_out, translated);           
 
-            if (c != '¿') {
-                char str[2];
-                str[0] = c;
-                str[1] = '\0';
-                fprintf(fp_out, str);
-            }
+
+            word = strtok(NULL, " ");
+            free(line_iso);
         }
     }
+    fclose(fp_in);
+    fclose(fp_out);
+
     return 0;
 }
 
@@ -87,6 +109,7 @@ int main(int argc, char *argv[]) {
     char *gvalue = NULL;
     char *ovalue = NULL;
 
+    printf("linea 112\n");
     char c;
     while ((c = getopt(argc, argv, "i:d:g:o:r")) != -1) {
         switch (c) {
@@ -120,17 +143,18 @@ int main(int argc, char *argv[]) {
                 abort ();
         }
     }
+    printf("linea 146\ndvalue: %s\n", dvalue);
     // Tenemos ya todo lo que necesitamos para empezar.
     // En caso de tener diccionarios deberiamos cargarlos.
     dict_trans_t dict_trans = dict_trans_empty(rflag);
+    printf("linea 150\n");
     dict_trans = dict_trans_load(dict_trans, dvalue);
+    printf("linea 152\n");
     dict_ignore_t dict_ignore = dict_ignore_empty();
     dict_ignore = dict_ignore_load(gvalue, dict_ignore);
 
+    printf("linea 156\n");
     // Hay que hacer unos chequeos con los argumentos de entrada
-    translator(ivalue, ovalue, dict_trans, dict_ignore);
-
-
-
-
+    translate(ivalue, ovalue, dict_trans, dict_ignore);
+    return 0;
 }
