@@ -15,8 +15,6 @@ struct _tree_node_t  {
     struct _tree_node_t *right;
 };
 
-typedef struct _tree_node_t *bst_t;
-
 bst_t bst_empty(void) {
     bst_t bst = NULL;
     return bst;
@@ -112,17 +110,15 @@ word_t bst_search(bst_t bst, word_t word) {
 }
 
 bst_t bst_add(bst_t bst, word_t word1, word_t word2) {
-    unsigned int prev_length = bst_length(bst);
-
     bst_t add = calloc(1,sizeof(struct _tree_node_t));
-
+    
     add->pair = pair_from_word(word1, word2);
     add->right = NULL;
     add->left = NULL;
-
+    
     bst_t prevtmp = NULL;
     bst_t tmp = bst;
-
+    
     if (bst != NULL) {
         while (tmp != NULL) {
             if (word_compare(word1, pair_fst(tmp->pair)) < 0) {
