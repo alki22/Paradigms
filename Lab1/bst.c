@@ -115,6 +115,8 @@ bst_t bst_add(bst_t bst, word_t word1, word_t word2) {
     add->pair = pair_from_word(word1, word2);
     add->right = NULL;
     add->left = NULL;
+
+    printf("pair fst: %s, snd: %s\n", pair_fst(add->pair), pair_snd(add->pair));
     
     bst_t prevtmp = NULL;
     bst_t tmp = bst;
@@ -232,6 +234,7 @@ pair_t *bst_to_array(bst_t bst) {
     stack_t stack = stack_empty();
     bst_t current = bst;
     unsigned int i = 0;
+
     while (!stack_is_empty(stack) || current != NULL) {
         if (current != NULL) {
             stack = stack_push(stack, current);
@@ -240,6 +243,7 @@ pair_t *bst_to_array(bst_t bst) {
             current = stack_top(stack);
             stack = stack_pop(stack);
             result[i] = pair_copy(current->pair);
+            assert(pair_is_equal(result[i], current->pair));
             ++i;
             current = current->right;
         }

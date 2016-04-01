@@ -47,7 +47,7 @@ dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
 
     fp = fopen(path, "r");
     if (fp == NULL) {
-        printf("dict.c: linea 50, Invalid file\n");
+        printf("Invalid file in dict_trans_load\n");
         exit(EXIT_FAILURE);
     }
 
@@ -58,22 +58,19 @@ dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
         line = readline(fp); // Que pasa con dict vacio
         if (line == NULL)
             break;
-        len = (unsigned int)strlen(line);
-        printf("line: %s\nlen: %u\n", line, len);
-    
-        // spa = malloc((strlen(line)-1)*sizeof(char));
-        // eng = malloc((strlen(line)-1)*sizeof(char));
 
+        len = (unsigned int)strlen(line);
+    
         spa = strtok(line, ", ");
         eng = strtok(NULL, ", ");
 
-        printf("spa: %s\neng: %s\n", spa, eng);
-
-
         if (dict->reverse)
-            dict = dict_trans_add(dict, eng, spa); // podriamos cargar en un array
+            dict = dict_trans_add(dict, eng, spa);
         else
             dict = dict_trans_add(dict, spa, eng);
+
+        free(line);
+        line = NULL;
     }
 
     fclose(fp);
@@ -105,13 +102,13 @@ void dict_trans_save(dict_trans_t dict, char *path) {
 
     fp = fopen(path, "w");
     if (fp == NULL) {
-        printf("dict.c: linea 108, Invalid file\n");
+        printf("Invalid file in dict_trans_save\n");
         exit(EXIT_FAILURE);
     }
 
     for (i = 0; i < dict->length; ++i) {
         fprintf(fp, "%s", pair_fst(array[i]));
-        fprintf(fp, ",");
+        fprintf(fp, ", ");
         fprintf(fp, "%s\n", pair_snd(array[i]));
     }
 
@@ -156,8 +153,9 @@ dict_ignore_t dict_ignore_load(dict_ignore_t dict, char *path) {
             dict->array[i] = line;
             ++i;
         }
-    }
 
+        fclose(fp);
+    }
     return dict;
 }
 
@@ -196,6 +194,7 @@ void dict_ignore_save(dict_ignore_t dict, char *path) {
     }
 
     for (i = 0; i < dict->length; ++i) {
+        printf("%s\n", dict->array[i]);
         fprintf(fp, "%s\n", dict->array[i]);
     }
 
