@@ -6,4 +6,5 @@
 
 char *readline(FILE * file);
 
+void empty_array(char array[], unsigned int length);
 #endif

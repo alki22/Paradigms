@@ -65,3 +65,9 @@ char *readline(FILE * file) {
     assert(result == NULL || result[strlen(result)] != '\n');
     return (result);
 }
+
+void empty_array(char array[], unsigned int length) {
+    unsigned int i;
+    for (i = 0; i < length; ++i)
+        array[i] = '\0';
+}

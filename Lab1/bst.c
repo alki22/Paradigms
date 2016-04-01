@@ -97,7 +97,7 @@ bool bst_is_equal(bst_t bst, bst_t other) {
 }
 
 word_t bst_search(bst_t bst, word_t word) {
-    word_t result;
+    word_t result = NULL;
     bst_t tmp = bst;
 
     while (tmp != NULL && (word_compare(word, pair_fst(tmp->pair)) != 0)) {
@@ -124,7 +124,7 @@ bst_t bst_add(bst_t bst, word_t word1, word_t word2) {
     bst_t tmp = bst;
 
     if (bst != NULL) {
-        while (tmp != NULL ) {
+        while (tmp != NULL) {
             if (word_compare(word1, pair_fst(tmp->pair)) < 0) {
                 prevtmp = tmp;
                 tmp = tmp->left;

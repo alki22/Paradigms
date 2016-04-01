@@ -44,7 +44,7 @@ dict_ignore_t dict_ignore_add(dict_ignore_t dict, word_t word);
  * Adds word to specified dictionary
  */
 
-dict_ignore_t dict_ignore_load(char *path, dict_ignore_t dict);
+dict_ignore_t dict_ignore_load(dict_ignore_t dict, char *path);
 /*
  * Loads the ignored words list into an array of strings
  */
@@ -55,6 +55,6 @@ bool dict_ignore_search(dict_ignore_t dict, word_t word);
 
 dict_ignore_t dict_ignore_destroy(dict_ignore_t dict);
 
-void dict_ignore_save(char *path, dict_ignore_t dict);
+void dict_ignore_save(dict_ignore_t dict, char *path);
 
 #endif

@@ -47,40 +47,33 @@ dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
 
     fp = fopen(path, "r");
     if (fp == NULL) {
-        printf("Invalid file\n");
+        printf("dict.c: linea 50, Invalid file\n");
         exit(EXIT_FAILURE);
     }
 
     while (true) {
-        line = readline(fp); // Que pasa con dict vacio        
-        spa = malloc((strlen(line)-1)*sizeof(char));
-        eng = malloc((strlen(line)-1)*sizeof(char));
+        unsigned int i, j = 0, k, len;
+        char c;
 
-        unsigned int i, j, k;
-        for (i = 0; i < strlen(line); ++i) {
-            char c = line[i];
-            printf("dict.c: linea 63, c = %c\n", c);
-            if (isalnum(c)) {
-                printf("yo' my nigga\n");
-                spa[i] = c;
-            } else {
-                printf("dict.c: linea 68");
-                unsigned int len = (unsigned int)strlen(line);
-                for(k = i+1; k < len; ++k) {
-                    printf("line[%d] = %c", k, line[k]);
-                    eng[j] = line[k];
-                    ++j;
-                }
-                break;
-            }
-        }
+        line = readline(fp); // Que pasa con dict vacio
+        if (line == NULL)
+            break;
+        len = (unsigned int)strlen(line);
+        printf("line: %s\nlen: %u\n", line, len);
+    
+        // spa = malloc((strlen(line)-1)*sizeof(char));
+        // eng = malloc((strlen(line)-1)*sizeof(char));
+
+        spa = strtok(line, ", ");
+        eng = strtok(NULL, ", ");
+
+        printf("spa: %s\neng: %s\n", spa, eng);
+
+
         if (dict->reverse)
             dict = dict_trans_add(dict, eng, spa); // podriamos cargar en un array
         else
             dict = dict_trans_add(dict, spa, eng);
-
-        free(spa);
-        free(eng);
     }
 
     fclose(fp);
@@ -112,7 +105,7 @@ void dict_trans_save(dict_trans_t dict, char *path) {
 
     fp = fopen(path, "w");
     if (fp == NULL) {
-        printf("Invalid file\n");
+        printf("dict.c: linea 108, Invalid file\n");
         exit(EXIT_FAILURE);
     }
 
@@ -146,25 +139,23 @@ dict_ignore_t dict_ignore_add(dict_ignore_t dict, word_t word) {
     return dict;
 }
 
-dict_ignore_t dict_ignore_load(char *path, dict_ignore_t dict) {
+dict_ignore_t dict_ignore_load(dict_ignore_t dict, char *path) {
     unsigned int lines = count_lines(path);
-    if (lines == 0) {
-        printf("Invalid file\n");
-        return NULL;
-    }
 
-    FILE *fp = fopen(path, "r");
+    if (lines > 0) {
+        FILE *fp = fopen(path, "r");
 
-    dict->array = (char **)malloc(lines*sizeof(char*));
-    dict->length = lines;
+        dict->array = (char **)malloc(lines*sizeof(char*));
+        dict->length = lines;
 
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    unsigned int i = 0;
-    while ((read = getline(&line, &len, fp)) != -1) {
-        dict->array[i] = line;
-        ++i;
+        char *line = NULL;
+        size_t len = 0;
+        ssize_t read;
+        unsigned int i = 0;
+        while ((read = getline(&line, &len, fp)) != -1) {
+            dict->array[i] = line;
+            ++i;
+        }
     }
 
     return dict;
@@ -179,7 +170,7 @@ bool dict_ignore_search(dict_ignore_t dict, word_t word) {
     dict_ignore_sort(dict);
     unsigned int i;
     for (i = 0; i < dict->length; ++i) {
-        if (!strcmp(word, dict->array[i]))
+        if (0 == strcmp(word, dict->array[i]))
             return 1;
     }
     return 0;
@@ -193,7 +184,7 @@ dict_ignore_t dict_ignore_destroy(dict_ignore_t dict) {
     return dict;
 }
 
-void dict_ignore_save(char *path, dict_ignore_t dict) {
+void dict_ignore_save(dict_ignore_t dict, char *path) {
     // Pre: dictionary is sorted alphabetically
     FILE *fp;
     unsigned int i;
