@@ -112,6 +112,11 @@ void dict_trans_save(dict_trans_t dict, char *path) {
         fprintf(fp, "%s\n", pair_snd(array[i]));
     }
 
+    for (i = 0; i < dict->length; ++i) {
+        pair_destroy(array[i]);
+    }
+    free(array);
+
     fclose(fp);
 }
 

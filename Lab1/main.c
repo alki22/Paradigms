@@ -15,22 +15,25 @@ word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
            word);
 
     char c;
-    char *result;
     scanf("%c", &c);
+    word_t result = NULL;
     switch (c) {
         case 'i':
-            result = word;
+            result = word_copy(word);
             break;
         case 'h':
-            result = word;
+            result = word_copy(word);
             dict_ignore_add(dict_ignore, word);
             break;
         case 't':
             printf("Traducir %s como: ", word);
+            result = malloc(100*sizeof(char));
             scanf("%s", result);
+            printf("word: %s, result: %s\n", word, result);
             break;
         case 's':
             printf("Traducir %s como: ", word);
+            result = malloc(100*sizeof(char));
             scanf("%s", result);
             printf("word: %s, result: %s\n", word, result);
             dict_trans_add(dict_trans, word, result);
@@ -45,13 +48,17 @@ word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
 word_t translate_word(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
     word_t translated = NULL;
     translated = dict_trans_search(dict_trans, word);
+
     if (translated == NULL) {
         if (dict_ignore_search(dict_ignore, word)) {
-            translated = word;
+            translated = word_copy(word);
         } else {
             translated = menu(dict_trans, dict_ignore, word);
         }
     }
+    else
+        translated = word_copy(translated);
+        
     return translated;
 }
 
@@ -74,24 +81,29 @@ int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t d
     while ((c = fgetc(fp_in)) != EOF) {
         if (c == -62){
             // Caso de ¿ o ¡
-        } else if (c == -61) {
+        }
+        else if (c == -61) {
             current[index] = c;
             ++index;
             c = fgetc(fp_in);
             current[index] = c;
             ++index;
             current[index] = '\0';
-        } else if(isalnum(c)) {
+        }
+        else if(isalnum(c)) {
             current[index] = c;
             ++index;
             current[index] = '\0';
-        } else {
+        }
+        else {
             if (index != 0) {
+                printf("current: %s\n", current);
                 translated = translate_word(dict_trans, dict_ignore, current);
                 fprintf(fp_out, "%s", translated);
+                printf("translated: %s\n", translated);
+                translated = word_destroy(translated);
             }
             fprintf(fp_out, "%c", c);
-            printf("translated: %s\n", translated);
             translated = NULL;
             empty_array(current, 100);
             index = 0;
