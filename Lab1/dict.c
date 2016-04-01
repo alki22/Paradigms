@@ -40,35 +40,35 @@ dict_trans_t dict_trans_add(dict_trans_t dict, word_t word1, word_t word2) {
 
 dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
     FILE *fp;
-    char *line = NULL;
+    char *line;
 
     word_t spa;
     word_t eng;
-    unsigned int i, j;
 
     fp = fopen(path, "r");
-    if (fp = NULL) {
+    if (fp == NULL) {
         printf("Invalid file\n");
         exit(EXIT_FAILURE);
     }
-    printf("dict.c: linea 54\n");
+
     while (true) {
-        printf("dict.c: linea 56\n");
-        line = readline(fp);
-        printf("dict.c: linea 58\n");
-        spa = malloc(strlen(line)-1*sizeof(char));
-        eng = malloc(strlen(line)-1*sizeof(char));
-        i = 0;
-        j = 0;
-        for (; i < strlen(line); ++i) {
-            printf("dict.c: linea 62\n");
+        line = readline(fp); // Que pasa con dict vacio        
+        spa = malloc((strlen(line)-1)*sizeof(char));
+        eng = malloc((strlen(line)-1)*sizeof(char));
+
+        unsigned int i, j, k;
+        for (i = 0; i < strlen(line); ++i) {
             char c = line[i];
-            printf("dict.c: linea 64, c = %c\n", c);
-            if (isalpha(c)) {
-                spa[strlen(spa)] = c;
+            printf("dict.c: linea 63, c = %c\n", c);
+            if (isalnum(c)) {
+                printf("yo' my nigga\n");
+                spa[i] = c;
             } else {
-                for(i = i+1; i < strlen(line); ++i) {
-                    eng[j] = line[i];
+                printf("dict.c: linea 68");
+                unsigned int len = (unsigned int)strlen(line);
+                for(k = i+1; k < len; ++k) {
+                    printf("line[%d] = %c", k, line[k]);
+                    eng[j] = line[k];
                     ++j;
                 }
                 break;

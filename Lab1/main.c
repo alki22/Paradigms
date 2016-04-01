@@ -58,44 +58,30 @@ int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t d
         exit(EXIT_FAILURE);
     }
 
-    word_t word, word_p, trans;
-    char *line, *line_iso;
-    size_t len;
-    while (true) {
-        line = readline(fp_in);
-        if (line == NULL)
-            break;
-        
-        len = strlen(line);
-        line_iso = malloc(len*sizeof(char));
-        utf8_to_latin9(line_iso, line, len);
-        word = strtok(line_iso, " ");
-        
-        while (word != NULL) {
-            word_t current = malloc(strlen(word)*sizeof(char));
-            unsigned int i, j = 0, took_letter = 0;
-            
-            for (i = 0; i < strlen(word); ++i) {
-                if (isalnum(word[i])) {
-                    current[j] = word[i];
-                    ++j;
-                    current[j] = '\0';
-                } else if (!took_letter) {
-                    fprintf(fp_out, "%c", word[i]);
-                } else {
-                    trans = translate_word(dict_trans, dict_ignore, current);
-                    fprintf(fp_out, "%s%c", trans, word[i]);
-                }
-            }
+    // Design choice
+    char current[100]; // Fijarse si neceitamos hacer ralloc
+    word_t translated = NULL;
+    unsigned int index;
+    char c;
 
-
-            word = strtok(NULL, " ");
-            free(line_iso);
+    while ((c = fgetc(fp_in)) != EOF) {
+        index = 0;
+        if (c == -62){
+            // Caso de ¿ o ¡
+        } else if (c == -61) {
+            current[++index] = c;
+            c = fgetc(fp_in);
+            current[++index] = c;
+            current[index] = '\0';
+        } else if(isalnum(c)) {
+            current[++index] = c;
+            current[index] = '\0';
+        } else {
+            translated = translate_word(dict_trans, dict_ignore, current);
+            fprintf(fp_out, "%s%c", translated, c);
+            translated = NULL;
         }
     }
-    fclose(fp_in);
-    fclose(fp_out);
-
     return 0;
 }
 
