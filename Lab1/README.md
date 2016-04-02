@@ -33,11 +33,11 @@ Para cada una de las cuales, se entrega una librería de funciones específicas.
 ### Funcion principal:
  Al correr el programa, este hace lo siguiente:
 * Hace un parseo mediante la función **getopt** de los flags con los que se corre el programa:
-     * -i (archivo de entrada).
-     * -d (archivo diccionario).
-     * -g (diccionario de palabras ignoradas). 
-     * -o (archivo de salida).
-     * -r (la traducción es reversa)
+      * -i (archivo de entrada).
+      * -d (archivo diccionario).
+      * -g (diccionario de palabras ignoradas). 
+      * -o (archivo de salida).
+      * -r (la traducción es reversa)
 
 * Se crea una estructura de diccionario de traducciones  y una de diccionario de palabras ignoradas vacías.
 
