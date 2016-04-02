@@ -1,3 +1,5 @@
+// Copyright 2016 Collias, Tiraboschi
+
 // Standard libraries included
 #include <assert.h>
 #include <ctype.h>
@@ -76,7 +78,7 @@ void empty_array(char array[], unsigned int length) {
 }
 
 char *first_letter_upper(char *word) {
-    char *result = calloc(3,sizeof(char));
+    char *result = calloc(3, sizeof(char));
     if (word[0] == -61) {
         result[0] = -61;
         switch (word[1]) {
@@ -108,9 +110,7 @@ char *first_letter_upper(char *word) {
                 printf("Error\n");
                 exit(EXIT_FAILURE);
         }
-    }
-    else if (isupper(word[0])) {
-
+    } else if (isupper(word[0])) {
         result[0] = tolower(word[0]);
     }
     return result;
@@ -125,9 +125,9 @@ bool lower_first_letter(char *word) {
             word[i] = fl[i];
         }
         result = true;
-    }
-    else
+    } else {
         result = false;
+    }
     return result;
 }
 
@@ -162,14 +162,13 @@ void upper_first_letter(char *word) {
                 printf("Error\n");
                 exit(EXIT_FAILURE);
         }
-    }
-    else {
+    } else {
         word[0] = toupper(word[0]);
     }
 }
 
 unsigned int count_lines(char *path) {
-    FILE *fp = fopen(path,"r");
+    FILE *fp = fopen(path, "r");
     int ch = 0;
     unsigned int lines = 0;
 
@@ -202,8 +201,9 @@ void insert(char **array, unsigned int i) {
         if (strcmp(array[j], array[j-1]) < 0) {
             swap(array, j, j - 1);
             j--;
-        } else
+        } else {
             break;
+        }
     }
 }
 

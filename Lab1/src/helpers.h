@@ -1,5 +1,7 @@
-#ifndef _HELPERS_H
-#define _HELPERS_H
+// Copyright 2016 Collias, Tiraboschi
+
+#ifndef LAB1_SRC_HELPERS_H_
+#define LAB1_SRC_HELPERS_H_
 
 // Standard libraries included
 #include <stdio.h>
@@ -9,17 +11,17 @@ char *readline(FILE * file);
 /*
  * Makes a line-by-line read of the given file.
  */
- 
+
 void empty_array(char array[], unsigned int length);
 /*
  * Empties the given array, frees it's alocated resources and sets it to NULL.
  */
- 
+
 bool lower_first_letter(char *word);
 /*
  * Returns if the word's first letter is a lower.
  */
- 
+
 void upper_first_letter(char *word);
 /*
  * Turns the word's first letter into an upper.
@@ -34,5 +36,5 @@ void insertion_sort(char **array, unsigned int length);
 /*
  * Sorts the given array.
  */
- 
-#endif
+
+#endif  // LAB1_SRC_HELPERS_H_

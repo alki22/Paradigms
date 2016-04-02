@@ -1,5 +1,7 @@
-#ifndef _STACK_H
-#define _STACK_H
+// Copyright 2016 Collias, Tiraboschi
+
+#ifndef LAB1_SRC_STACK_H_
+#define LAB1_SRC_STACK_H_
 
 #include <assert.h>
 #include <stdlib.h>
@@ -61,4 +63,4 @@ stack_t stack_destroy(stack_t stack);
  * Free the resources allocated for the given 'stack', and set it to NULL.
  */
 
-#endif
+#endif  // LAB1_SRC_STACK_H_

@@ -1,8 +1,10 @@
-#ifndef _WORD_H
-#define _WORD_H
+// Copyright 2016 Collias, Tiraboschi
+
+#ifndef LAB1_SRC_WORD_H_
+#define LAB1_SRC_WORD_H_
 
 // Standard libraries included
-#include <stdbool.h>
+#include "stdbool.h"
 
 typedef char *word_t;
 
@@ -29,5 +31,5 @@ word_t word_destroy(word_t word);
  * Destroys the given word, free memory allocated and sets the word to NULL.
  */
 
-#endif
+#endif  // LAB1_SRC_WORD_H_
 

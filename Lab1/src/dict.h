@@ -1,5 +1,7 @@
-#ifndef _DICT_H
-#define _DICT_H
+// Copyright 2016 Collias, Tiraboschi
+
+#ifndef LAB1_SRC_DICT_H_
+#define LAB1_SRC_DICT_H_
 
 // Standard libraries included
 #include <ctype.h>
@@ -33,12 +35,12 @@ word_t dict_trans_search(dict_trans_t dict, word_t word);
 /*
  * Searchs for the given word in the translations dictionary.
  */
- 
+
 dict_trans_t dict_trans_destroy(dict_trans_t dict);
 /*
  * Free the translations dictionary and sets it to NULL.
  */
- 
+
 void dict_trans_save(dict_trans_t dict, char *path, int reverse);
 /*
  * Saves the dictionary into the dictionary file in the given path.
@@ -63,7 +65,7 @@ void dict_ignore_sort(dict_ignore_t dict);
 /*
  * Sorts the ignored words dictionary in alphabetical order.
  */
- 
+
 bool dict_ignore_search(dict_ignore_t dict, word_t word);
 /*
  * Returns if the given word is in the ignored words dictionary.
@@ -79,4 +81,4 @@ void dict_ignore_save(dict_ignore_t dict, char *path);
  * Writes the new ignored words dictionary into the dictionary file in the given path.
  */
 
-#endif
+#endif  // LAB1_SRC_DICT_H_

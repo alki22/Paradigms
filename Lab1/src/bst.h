@@ -1,5 +1,7 @@
-#ifndef _BST_H
-#define _BST_H
+// Copyright 2016 Collias, Tiraboschi
+
+#ifndef LAB1_SRC_BST_H_
+#define LAB1_SRC_BST_H_
 
 // Standard libraries included
 #include <stdbool.h>
@@ -100,4 +102,4 @@ pair_t *bst_to_array(bst_t bst);
 * to ’NULL’ or to a well-formed structure. It is guaranteed that the
 * pointers remain valid after the execution of the functions. */
 
-#endif
+#endif  // LAB1_SRC_BST_H_

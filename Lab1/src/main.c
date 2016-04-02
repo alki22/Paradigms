@@ -1,3 +1,5 @@
+// Copyright 2016 Collias, Tiraboschi
+
 // Standard libraries included
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +13,7 @@
 
 word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
     printf("There is no translation for the word: %s\n"
-           "Ignore (i) - Ignore All (h) - Translate as (t) - Always translate" 
+           "Ignore (i) - Ignore All (h) - Translate as (t) - Always translate"
            " as (s)\n", word);
 
     char c;
@@ -41,12 +43,13 @@ word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
             printf("Invalid option");
             exit(EXIT_FAILURE);
     }
-    while(c != '\n')
+    while (c != '\n')
         scanf("%c", &c);
     return result;
 }
 
-word_t translate_word(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
+word_t translate_word(dict_trans_t dict_trans, dict_ignore_t dict_ignore,
+                      word_t word) {
     word_t translated = NULL;
     bool lowered = lower_first_letter(word);
     printf("word: %s, lowered: %d\n", word, lowered);
@@ -58,17 +61,18 @@ word_t translate_word(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t
         } else {
             translated = menu(dict_trans, dict_ignore, word);
         }
-    }
-    else
+    } else {
         translated = word_copy(translated);
-        
+    }
+
     if (lowered) {
         upper_first_letter(translated);
     }
     return translated;
 }
 
-int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t dict_ignore) {
+int translate(char *path, char *output, dict_trans_t dict_trans,
+              dict_ignore_t dict_ignore) {
     FILE *fp_in = fopen(path, "r");
     FILE *fp_out = fopen(output, "w");
 
@@ -85,23 +89,20 @@ int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t d
     char c;
 
     while ((c = fgetc(fp_in)) != EOF) {
-        if (c == -62){
+        if (c == -62) {
             c = fgetc(fp_in);
-        }
-        else if (c == -61) {
+        } else if (c == -61) {
             current[index] = c;
             ++index;
             c = fgetc(fp_in);
             current[index] = c;
             ++index;
             current[index] = '\0';
-        }
-        else if(isalnum(c)) {
+        } else if (isalnum(c)) {
             current[index] = c;
             ++index;
             current[index] = '\0';
-        }
-        else {
+        } else {
             if (index != 0) {
                 printf("current: %s\n", current);
                 translated = translate_word(dict_trans, dict_ignore, current);
@@ -122,14 +123,11 @@ int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t d
 }
 
 int main(int argc, char *argv[]) {
-    int dflag = 0;
-    int gflag = 0;
-    int oflag = 0;
     int rflag = 0;
     char *ivalue = NULL;
-    char *dvalue = NULL;
-    char *gvalue = NULL;
-    char *ovalue = NULL;
+    char *dvalue = "dict_trans.txt";
+    char *gvalue = "dict_ignore.txt";
+    char *ovalue = "output.txt";
 
     char c;
     while ((c = getopt(argc, argv, "i:d:g:o:r")) != -1) {
@@ -138,15 +136,12 @@ int main(int argc, char *argv[]) {
                 ivalue = optarg;
                 break;
             case 'd':
-                dflag = 1;
                 dvalue = optarg;
                 break;
             case 'g':
-                gflag = 1;
                 gvalue = optarg;
                 break;
             case 'o':
-                oflag = 1;
                 ovalue = optarg;
                 break;
             case 'r':
@@ -154,15 +149,22 @@ int main(int argc, char *argv[]) {
                 break;
             case '?':
                 if (optopt == 'c')
-                    fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+                    fprintf(stderr, "Option -%c requires an argument.\n",
+                             optopt);
                 else if (isprint (optopt))
-                    fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+                    fprintf(stderr, "Unknown option `-%c'.\n", optopt);
                 else
-                    fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
+                    fprintf(stderr, "Unknown option character `\\x%x'.\n",
+                             optopt);
                 return 1;
             default:
-                abort ();
+                abort();
         }
+    }
+
+    if (ivalue == NULL) {
+        fprintf(stderr, "Input file needed.\n");
+        abort();
     }
 
     dict_trans_t dict_trans = dict_trans_empty(rflag);

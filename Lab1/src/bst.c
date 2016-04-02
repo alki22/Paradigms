@@ -1,8 +1,10 @@
+// Copyright 2016 Collias, Tiraboschi
+
 // Standard libraries included
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <assert.h>
 
 // User defined libraries included
 #include "bst.h"
@@ -72,7 +74,6 @@ bool bst_is_equal(bst_t bst, bst_t other) {
     if (bst_length(aux_bst) == bst_length(aux_other)) {
         while (!stack_is_empty(stack_bst) ||
                (aux_bst != NULL && aux_other != NULL)) {
-
             if (aux_bst != NULL && aux_other != NULL) {
                 stack_bst = stack_push(stack_bst, aux_bst);
                 stack_other = stack_push(stack_other, aux_other);
@@ -89,8 +90,9 @@ bool bst_is_equal(bst_t bst, bst_t other) {
                 aux_other = aux_other->right;
             }
         }
-    } else
+    } else {
         result = false;
+    }
     stack_bst = stack_destroy(stack_bst);
     stack_other = stack_destroy(stack_other);
     return result;
@@ -112,15 +114,15 @@ word_t bst_search(bst_t bst, word_t word) {
 }
 
 bst_t bst_add(bst_t bst, word_t word1, word_t word2) {
-    bst_t add = calloc(1,sizeof(struct _tree_node_t));
-    
+    bst_t add = calloc(1, sizeof(struct _tree_node_t));
+
     add->pair = pair_from_word(word1, word2);
     add->right = NULL;
     add->left = NULL;
 
     bst_t prevtmp = NULL;
     bst_t tmp = bst;
-    
+
     if (bst != NULL) {
         while (tmp != NULL) {
             if (word_compare(word1, pair_fst(tmp->pair)) < 0) {
@@ -132,10 +134,14 @@ bst_t bst_add(bst_t bst, word_t word1, word_t word2) {
             }
         }
 
-        if (word_compare(word1, pair_fst(prevtmp->pair)) < 0) prevtmp->left = add;
-        else prevtmp->right = add;
+        if (word_compare(word1, pair_fst(prevtmp->pair)) < 0)
+            prevtmp->left = add;
+        else
+            prevtmp->right = add;
 
-    } else bst = add;
+    } else {
+        bst = add;
+    }
 
     return bst;
 }
@@ -179,8 +185,9 @@ bst_t bst_remove(bst_t bst, word_t word) {
         } else if (word_compare(word, pair_fst(tmp->pair)) > 0) {
             prev_tmp = tmp;
             tmp = tmp->right;
-        } else
+        } else {
             flag = true;
+        }
     }
 
     if (flag && prev_tmp != NULL) {

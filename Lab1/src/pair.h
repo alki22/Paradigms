@@ -1,5 +1,7 @@
-#ifndef _PAIR_H
-#define _PAIR_H
+// Copyright 2016 Collias, Tiraboschi
+
+#ifndef LAB1_SRC_PAIR_H_
+#define LAB1_SRC_PAIR_H_
 
 // Standard libraries included
 #include <stdbool.h>
@@ -44,4 +46,4 @@ bool pair_is_equal(pair_t pair, pair_t other);
 
 unsigned int pair_size(void);
 
-#endif
+#endif  // LAB1_SRC_PAIR_H_

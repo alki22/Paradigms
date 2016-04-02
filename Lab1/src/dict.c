@@ -1,3 +1,5 @@
+// Copyright 2016 Collias, Tiraboschi
+
 // Standard libraries included
 #include <ctype.h>
 #include <stdio.h>
@@ -49,15 +51,10 @@ dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
     }
 
     while (true) {
-        unsigned int i, j = 0, k, len;
-        char c;
-
         line = readline(fp);
         if (line == NULL)
             break;
 
-        len = (unsigned int)strlen(line);
-    
         spa = strtok(line, ", ");
         eng = strtok(NULL, ", ");
 
@@ -108,8 +105,7 @@ void dict_trans_save(dict_trans_t dict, char *path, int reverse) {
             fprintf(fp, ", ");
             fprintf(fp, "%s\n", pair_fst(array[i]));
         }
-    }
-    else {
+    } else {
         for (i = 0; i < dict->length; ++i) {
             fprintf(fp, "%s", pair_fst(array[i]));
             fprintf(fp, ", ");
@@ -137,7 +133,7 @@ dict_ignore_t dict_ignore_add(dict_ignore_t dict, word_t word) {
 
     word_t *new = malloc(dict->length*sizeof(char *));
     unsigned int i;
-    for(i = 0; i < dict->length - 1; ++i)
+    for (i = 0; i < dict->length - 1; ++i)
         new[i] = dict->array[i];
     new[i] = word_copy(word);
 
@@ -152,7 +148,7 @@ dict_ignore_t dict_ignore_load(dict_ignore_t dict, char *path) {
     if (lines > 0) {
         FILE *fp = fopen(path, "r");
 
-        dict->array = (char **)malloc(lines*sizeof(char*));
+        dict->array = malloc(lines*sizeof(char*));
         dict->length = lines;
 
         char *line = NULL;
