@@ -116,8 +116,6 @@ bst_t bst_add(bst_t bst, word_t word1, word_t word2) {
     add->right = NULL;
     add->left = NULL;
 
-    printf("pair fst: %s, snd: %s\n", pair_fst(add->pair), pair_snd(add->pair));
-    
     bst_t prevtmp = NULL;
     bst_t tmp = bst;
     

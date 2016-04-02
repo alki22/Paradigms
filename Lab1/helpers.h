@@ -7,4 +7,8 @@
 char *readline(FILE * file);
 
 void empty_array(char array[], unsigned int length);
+
+bool lower_first_letter(char *word);
+
+void upper_first_letter(char *word);
 #endif

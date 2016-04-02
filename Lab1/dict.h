@@ -32,7 +32,7 @@ word_t dict_trans_search(dict_trans_t dict, word_t word);
 
 dict_trans_t dict_trans_destroy(dict_trans_t dict);
 
-void dict_trans_save(dict_trans_t dict, char *path);
+void dict_trans_save(dict_trans_t dict, char *path, int reverse);
 
 dict_ignore_t dict_ignore_empty(void);
 /*

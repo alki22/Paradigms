@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,4 +71,97 @@ void empty_array(char array[], unsigned int length) {
     unsigned int i;
     for (i = 0; i < length; ++i)
         array[i] = '\0';
+}
+
+char *first_letter_upper(char *word) {
+    char *result = calloc(3,sizeof(char));
+    if (word[0] == -61) {
+        result[0] = -61;
+        switch (word[1]) {
+            // Á
+            case -127:
+                result[1] = -95;
+                break;
+            // É
+            case -119:
+                result[1] = -87;
+                break;
+            // Í
+            case -115:
+                result[1] = -83;
+                break;
+            // Ó
+            case -109:
+                result[1] = -77;
+                break;
+            // Ú
+            case -102:
+                result[1] = -70;
+                break;
+            // Ñ
+            case -111:
+                word[1] = -79;
+                break;
+            default:
+                printf("Error\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else if (isupper(word[0])) {
+
+        result[0] = tolower(word[0]);
+    }
+    return result;
+}
+
+bool lower_first_letter(char *word) {
+    bool result;
+    char *fl = first_letter_upper(word);
+    if (strlen(fl) > 0) {
+        unsigned int i, len = (unsigned int)strlen(fl);
+        for (i = 0; i < len; ++i) {
+            word[i] = fl[i];
+        }
+        result = true;
+    }
+    else
+        result = false;
+    return result;
+}
+
+void upper_first_letter(char *word) {
+    if (word[0] == -61) {
+        switch (word[1]) {
+            // Á
+            case -95:
+                word[1] = -127;
+                break;
+            // É
+            case -87:
+                word[1] = -119;
+                break;
+            // Í
+            case -83:
+                word[1] = -115;
+                break;
+            // Ó
+            case -77:
+                word[1] = -109;
+                break;
+            // Ú
+            case -70:
+                word[1] = -102;
+                break;
+            // Ñ
+            case -79:
+                word[1] = -111;
+                break;
+            default:
+                printf("Error\n");
+                exit(EXIT_FAILURE);
+        }
+    }
+    else {
+        word[0] = toupper(word[0]);
+    }
 }

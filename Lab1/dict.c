@@ -40,7 +40,7 @@ dict_trans_t dict_trans_add(dict_trans_t dict, word_t word1, word_t word2) {
 
 dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
     FILE *fp;
-    char *line;
+    char *line = NULL;
 
     word_t spa;
     word_t eng;
@@ -93,7 +93,7 @@ dict_trans_t dict_trans_destroy(dict_trans_t dict) {
     return dict;
 }
 
-void dict_trans_save(dict_trans_t dict, char *path) {
+void dict_trans_save(dict_trans_t dict, char *path, int reverse) {
     // falta pensar que pasa cuando reverse = 1
     FILE *fp;
     unsigned int i;
@@ -106,10 +106,19 @@ void dict_trans_save(dict_trans_t dict, char *path) {
         exit(EXIT_FAILURE);
     }
 
-    for (i = 0; i < dict->length; ++i) {
-        fprintf(fp, "%s", pair_fst(array[i]));
-        fprintf(fp, ", ");
-        fprintf(fp, "%s\n", pair_snd(array[i]));
+    if (reverse) {
+        for (i = 0; i < dict->length; ++i) {
+            fprintf(fp, "%s", pair_snd(array[i]));
+            fprintf(fp, ", ");
+            fprintf(fp, "%s\n", pair_fst(array[i]));
+        }
+    }
+    else {
+        for (i = 0; i < dict->length; ++i) {
+            fprintf(fp, "%s", pair_fst(array[i]));
+            fprintf(fp, ", ");
+            fprintf(fp, "%s\n", pair_snd(array[i]));
+        }
     }
 
     for (i = 0; i < dict->length; ++i) {
@@ -129,15 +138,15 @@ dict_ignore_t dict_ignore_empty(void) {
 
 dict_ignore_t dict_ignore_add(dict_ignore_t dict, word_t word) {
     dict->length++;
+
     word_t *new = malloc(dict->length*sizeof(char *));
     unsigned int i;
     for(i = 0; i < dict->length - 1; ++i)
         new[i] = dict->array[i];
-    new[i] = word;
+    new[i] = word_copy(word);
 
     free(dict->array);
     dict->array = new;
-    ++dict->length;
     return dict;
 }
 
@@ -151,12 +160,11 @@ dict_ignore_t dict_ignore_load(dict_ignore_t dict, char *path) {
         dict->length = lines;
 
         char *line = NULL;
-        size_t len = 0;
-        ssize_t read;
         unsigned int i = 0;
-        while ((read = getline(&line, &len, fp)) != -1) {
+        while ((line = readline(fp)) != NULL) {
             dict->array[i] = line;
             ++i;
+            line = NULL;
         }
 
         fclose(fp);
@@ -173,7 +181,7 @@ bool dict_ignore_search(dict_ignore_t dict, word_t word) {
     dict_ignore_sort(dict);
     unsigned int i;
     for (i = 0; i < dict->length; ++i) {
-        if (0 == strcmp(word, dict->array[i]))
+        if (!word_compare(word, dict->array[i]))
             return 1;
     }
     return 0;
@@ -194,12 +202,11 @@ void dict_ignore_save(dict_ignore_t dict, char *path) {
 
     fp = fopen(path, "w");
     if (fp == NULL) {
-        printf("Invalid file\n");
+        printf("Invalid file in dict_ignore_save\n");
         exit(EXIT_FAILURE);
     }
 
     for (i = 0; i < dict->length; ++i) {
-        printf("%s\n", dict->array[i]);
         fprintf(fp, "%s\n", dict->array[i]);
     }
 

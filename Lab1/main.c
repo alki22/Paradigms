@@ -16,6 +16,7 @@ word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
 
     char c;
     scanf("%c", &c);
+    printf("%c\n", c);
     word_t result = NULL;
     switch (c) {
         case 'i':
@@ -42,11 +43,15 @@ word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
             printf("Invalid option");
             exit(EXIT_FAILURE);
     }
+    while(c != '\n')
+        scanf("%c", &c);
     return result;
 }
 
 word_t translate_word(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
     word_t translated = NULL;
+    bool lowered = lower_first_letter(word);
+    printf("word: %s, lowered: %d\n", word, lowered);
     translated = dict_trans_search(dict_trans, word);
 
     if (translated == NULL) {
@@ -59,6 +64,9 @@ word_t translate_word(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t
     else
         translated = word_copy(translated);
         
+    if (lowered) {
+        upper_first_letter(translated);
+    }
     return translated;
 }
 
@@ -80,7 +88,7 @@ int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t d
 
     while ((c = fgetc(fp_in)) != EOF) {
         if (c == -62){
-            // Caso de ¿ o ¡
+            c = fgetc(fp_in);
         }
         else if (c == -61) {
             current[index] = c;
@@ -169,10 +177,11 @@ int main(int argc, char *argv[]) {
     translate(ivalue, ovalue, dict_trans, dict_ignore);
 
     //printf("Guardando los diccionarios\n");
-    dict_trans_save(dict_trans, dvalue);
+    dict_trans_save(dict_trans, dvalue, rflag);
     dict_ignore_save(dict_ignore, gvalue);
 
     dict_trans_destroy(dict_trans);
     dict_ignore_destroy(dict_ignore);
+    printf("Completado!\n");
     return 0;
 }
