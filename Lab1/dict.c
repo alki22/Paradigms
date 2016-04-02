@@ -55,7 +55,7 @@ dict_trans_t dict_trans_load(dict_trans_t dict, char *path) {
         unsigned int i, j = 0, k, len;
         char c;
 
-        line = readline(fp); // Que pasa con dict vacio
+        line = readline(fp);
         if (line == NULL)
             break;
 
@@ -94,7 +94,6 @@ dict_trans_t dict_trans_destroy(dict_trans_t dict) {
 }
 
 void dict_trans_save(dict_trans_t dict, char *path, int reverse) {
-    // falta pensar que pasa cuando reverse = 1
     FILE *fp;
     unsigned int i;
 
@@ -196,7 +195,6 @@ dict_ignore_t dict_ignore_destroy(dict_ignore_t dict) {
 }
 
 void dict_ignore_save(dict_ignore_t dict, char *path) {
-    // Pre: dictionary is sorted alphabetically
     FILE *fp;
     unsigned int i;
 
