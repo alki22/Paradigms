@@ -1,8 +1,12 @@
+// Standard libraries included
 #include <stdlib.h>
 #include <stdbool.h>
+
+// User defined libraries included
 #include "stack.h"
 #include "bst.h"
 
+// Stack structure definition
 struct _stack_t {
     bst_t bst;
     struct _stack_t *next;

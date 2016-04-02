@@ -1,7 +1,10 @@
 #ifndef _PAIR_H
 #define _PAIR_H
 
+// Standard libraries included
 #include <stdbool.h>
+
+// User defined libraries included
 #include "word.h"
 
 typedef struct _pair_t *pair_t;

@@ -1,8 +1,8 @@
 #ifndef _DICT_HELPERS_H
 #define _DICT_HELPERS_H
 
-#include <stdlib.h>
 // Standard libraries included
+#include <stdlib.h>
 
 unsigned int count_lines(char *path);
 /*

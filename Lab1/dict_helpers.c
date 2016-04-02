@@ -1,7 +1,9 @@
+// Standard libraries included
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-// Standard libraries included
+
+// User defined libraries included
 #include "dict_helpers.h"
 
 unsigned int count_lines(char *path) {

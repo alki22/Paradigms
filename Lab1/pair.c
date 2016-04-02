@@ -1,11 +1,14 @@
+// Standard libraries included
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 
+// User defined libraries included
 #include "pair.h"
 #include "word.h"
 
+// Pair structure definition
 struct _pair_t
 {
 	word_t fst;

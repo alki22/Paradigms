@@ -1,6 +1,9 @@
+// Standard libraries included
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+// User defined libraries included
 #include <stdbool.h>
 #include <string.h>
 #include "word.h"

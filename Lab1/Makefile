@@ -1,18 +1,11 @@
-TARGET = dictionary
 CC = gcc
-CFLAGS = -g
-SOURCES = $(wildcard *.c)
+CFLAGS = -Wall -Werror -Wextra -pedantic -std=c99 -O2 -g
+SOURCES = $(wildcard src/*.c)
 HEADERS = $(wildcard *.h)
 OBJECTS = $(SOURCES:.c=.o)
 
-.all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
+.PHONY : clean
 
--include .depend
-
-.depend: $(SOURCES) $(HEADERS) 
-	$(CC) -MM $(SOURCES) > .depend
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f bin/translator

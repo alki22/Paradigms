@@ -1,7 +1,10 @@
 #ifndef _BST_H
 #define _BST_H
 
+// Standard libraries included
 #include <stdbool.h>
+
+// User defined libraries included
 #include "pair.h"
 #include "word.h"
 

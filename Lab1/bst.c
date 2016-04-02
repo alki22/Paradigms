@@ -1,14 +1,16 @@
+// Standard libraries included
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
-//Standard libraries included
+
+// User defined libraries included
 #include "bst.h"
 #include "pair.h"
 #include "stack.h"
 #include "word.h"
-//User defined libraries included
 
+// Binary search tree structure definition
 struct _tree_node_t  {
     struct _pair_t *pair;
     struct _tree_node_t *left;

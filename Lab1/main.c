@@ -10,8 +10,8 @@
 #include "helpers.h"
 
 word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
-    printf("No hay traducción para la palabra: %s\n"
-           "Ignorar (i) - Ignorar Todas (h) - Traducir como (t) - Traducir siempre como (s)\n",
+    printf("There is no translation for the word: %s\n"
+           "Ignore (i) - Ignore All (h) - Translate as (t) - Always translate as (s)\n",
            word);
 
     char c;
@@ -27,16 +27,14 @@ word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
             dict_ignore_add(dict_ignore, word);
             break;
         case 't':
-            printf("Traducir %s como: ", word);
+            printf("Translate %s as: ", word);
             result = malloc(100*sizeof(char));
             scanf("%s", result);
-            printf("word: %s, result: %s\n", word, result);
             break;
         case 's':
-            printf("Traducir %s como: ", word);
+            printf("Translate %s as: ", word);
             result = malloc(100*sizeof(char));
             scanf("%s", result);
-            printf("word: %s, result: %s\n", word, result);
             dict_trans_add(dict_trans, word, result);
             break;
         default:
@@ -80,7 +78,7 @@ int translate(char *path, char *output, dict_trans_t dict_trans, dict_ignore_t d
     }
 
     // Design choice
-    char current[100]; // Fijarse si neceitamos hacer ralloc
+    char current[100];
     current[0] = '\0';
     word_t translated = NULL;
     unsigned int index = 0;
@@ -173,10 +171,8 @@ int main(int argc, char *argv[]) {
     dict_trans = dict_trans_load(dict_trans, dvalue);
     dict_ignore = dict_ignore_load(dict_ignore, gvalue);
 
-    // Hay que hacer unos chequeos con los argumentos de entrada
     translate(ivalue, ovalue, dict_trans, dict_ignore);
 
-    //printf("Guardando los diccionarios\n");
     dict_trans_save(dict_trans, dvalue, rflag);
     dict_ignore_save(dict_ignore, gvalue);
 
