@@ -1,14 +1,14 @@
+// Standard libraries included
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// Standard libraries included
+
+// User defined libraries included
 #include "bst.h"
 #include "dict.h"
-#include "dict_helpers.h"
 #include "helpers.h"
 #include "word.h"
-// User defined libraries included
 
 struct _dict_trans_t {
     struct _tree_node_t *tree;
@@ -20,9 +20,6 @@ struct _dict_ignore_t {
     word_t *array;
     unsigned int length;
 };
-
-//typedef struct _dict_trans_t *dict_trans_t;
-//typedef struct _dict_ignore_t *dict_ignore_t;
 
 dict_trans_t dict_trans_empty(bool reverse) {
     dict_trans_t dict = malloc(1*sizeof(struct _dict_trans_t));

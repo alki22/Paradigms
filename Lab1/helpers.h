@@ -24,5 +24,15 @@ void upper_first_letter(char *word);
 /*
  * Turns the word's first letter into an upper.
  */
+
+unsigned int count_lines(char *path);
+/*
+ * Returns the number of lines of the file.
+ */
+
+void insertion_sort(char **array, unsigned int length);
+/*
+ * Sorts the given array.
+ */
  
 #endif

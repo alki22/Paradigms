@@ -9,7 +9,7 @@
 // User defined libraries included
 #include "word.h"
 #include "bst.h"
-#include "dict_helpers.h"
+#include "helpers.h"
 
 typedef struct _dict_trans_t *dict_trans_t;
 typedef struct _dict_ignore_t *dict_ignore_t;
@@ -33,11 +33,13 @@ word_t dict_trans_search(dict_trans_t dict, word_t word);
 /*
  * Searchs for the given word in the translations dictionary.
  */
+ 
 dict_trans_t dict_trans_destroy(dict_trans_t dict);
 /*
  * Free the translations dictionary and sets it to NULL.
  */
-void dict_trans_save(dict_trans_t dict, char *path);
+ 
+void dict_trans_save(dict_trans_t dict, char *path, int reverse);
 /*
  * Saves the dictionary into the dictionary file in the given path.
  */

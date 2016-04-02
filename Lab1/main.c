@@ -11,8 +11,8 @@
 
 word_t menu(dict_trans_t dict_trans, dict_ignore_t dict_ignore, word_t word) {
     printf("There is no translation for the word: %s\n"
-           "Ignore (i) - Ignore All (h) - Translate as (t) - Always translate as (s)\n",
-           word);
+           "Ignore (i) - Ignore All (h) - Translate as (t) - Always translate" 
+           " as (s)\n", word);
 
     char c;
     scanf("%c", &c);
