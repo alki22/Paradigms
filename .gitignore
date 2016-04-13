@@ -2,5 +2,13 @@
 *.o
 *.c~
 *.h~
+*.class
 # Misc
 todo
+d_ignore
+d_trans
+input
+output
+translator
+Copy.java
+*.txt

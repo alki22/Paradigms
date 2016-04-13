@@ -1,17 +1,18 @@
+package translator;
 import java.io.*;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 public class DictIgnore {
-    public List<String> dict_ignore; // Lista de palabras ignoradas.
+    public ArrayList<String> iglist; // Lista de palabras ignoradas.
 
     public DictIgnore(){
-        this.dict_ignore = Collections.<String>emptyList();
+        this.iglist = new ArrayList<String>();
     }
 
     public void add(String word) {
-        this.dict_ignore.add(word);
+        this.iglist.add(word);
     }
     
     public void load(String path) throws java.io.FileNotFoundException, IOException {
@@ -25,12 +26,19 @@ public class DictIgnore {
     }
     
     public boolean is_ignored(String word) {
-        return this.dict_ignore.contains(word);
+        return this.iglist.contains(word);
+    }
+
+    public void print() {
+        for (String word : this.iglist) {
+            System.out.println("    " + word);
+        }
+        System.out.println();
     }
     
     public void save(String path) throws java.io.FileNotFoundException {
         PrintWriter pw = new PrintWriter(new FileOutputStream(path));
-        for (String line : this.dict_ignore)
+        for (String line : this.iglist)
             pw.println(line);
         pw.close();
     }
