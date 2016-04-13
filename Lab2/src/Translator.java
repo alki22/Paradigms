@@ -16,53 +16,72 @@ public class Translator {
         char ch = reader.next().charAt(0);
 
         if (ch == 'i') {
-            System.out.println("You chose to ignore the word.");
+            System.out.println("You chose to ignore the word.\n");
         }
         else if (ch == 'h') {
-            System.out.println("You chose to ignore the word, always.");
+            System.out.println("You chose to ignore the word, always.\n");
             dict_i.add(word);
         }
         else if (ch == 't') {
             System.out.print("You chose to translate the word as: ");
             result = (String)reader.next();
+
+            if (!(new Helpers().isAlphaNumeric(result))) {
+                System.out.println("Word entered is invalid, ignoring the word.\n");
+                result = word;
+            }
+            else {
+                System.out.println();
+            }
         }
         else if (ch == 's') {
             System.out.print("You chose to translate the word, always, as: ");
-            // readline
             result = (String)reader.next();
-            // cuidado con que guardamos en el diccionario.
-            dict_t.add(word, result);
-        }
 
-        reader.close();
+            if (new Helpers().isAlphaNumeric(result)) {
+                dict_t.add(word, result);
+                System.out.println("Word added to dictionary.\n");
+            }
+            else {
+                System.out.println("Word entered is invalid, ignoring the word.\n");
+                result = word;
+            }
+        }
 
         return result;
     }
 
     private String translate_word(char[] word, DictTrans dict_t, DictIgnore dict_i) {
-        Helpers help = new Helpers();
-        word = help.polish_array(word);
-
-        boolean lowered = help.lower_first_letter(word);
+        word = new Helpers().polishArray(word);
         String word_str = new String(word);
-        String translated_str = dict_t.search(word_str);
+        String translated_str;
 
-        if (translated_str == null) {
-            if (dict_i.is_ignored(word_str)) {
-                translated_str = word_str;
+        if (new Helpers().isNumber(word_str)) {
+            translated_str = word_str;
+        } 
+        else {
+            boolean lowered = new Helpers().lowerFirstLetter(word);
+            word_str = new String(word);
+            translated_str = dict_t.search(word_str);
+
+            if (translated_str == null) {
+                if (dict_i.is_ignored(word_str)) {
+                    translated_str = word_str;
+                }
+                else {
+                    translated_str = menu(word_str, dict_t, dict_i);
+                }
             }
-            else {
-                translated_str = menu(word_str, dict_t, dict_i);
+
+
+            if (lowered) {
+                char[] translated = translated_str.toCharArray();
+                translated[0] = Character.toUpperCase(translated[0]);
+                translated_str = new String(translated);
             }
         }
 
-        char[] translated = translated_str.toCharArray();
-
-        if (lowered) {
-            translated[0] = Character.toUpperCase(translated[0]);
-        }
-
-        return new String(translated);
+        return translated_str;
     }
 
     private void translate(String ivalue, String ovalue, DictTrans dict_t, DictIgnore dict_i)
