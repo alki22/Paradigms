@@ -49,16 +49,21 @@ public class DictTrans {
         Iterator iterator = set.iterator();
         while(iterator.hasNext()) {
             Map.Entry mentry = (Map.Entry)iterator.next();
-            System.out.println("    " + mentry.getValue());
+            System.out.println("    " + mentry.getKey() + ", " + mentry.getValue());
         }
         System.out.println();
     }
-    
+
     public void save(String path) throws java.io.FileNotFoundException {
         PrintWriter pw = new PrintWriter(new FileOutputStream(path));
-        for(Map.Entry<String,String> entry : this.tmap.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
+
+        Set set = this.tmap.entrySet();
+        Iterator iterator = set.iterator();
+
+        while(iterator.hasNext()) {
+            Map.Entry mentry = (Map.Entry)iterator.next();
+            String key = (String)mentry.getKey();
+            String value = (String)mentry.getValue();
             if (this.reverse) {
                 pw.println(value + ", " + key);
             }

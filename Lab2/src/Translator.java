@@ -2,8 +2,46 @@ import translator.*;
 import helpers.*;
 
 import java.io.*;
+import java.util.Scanner;
 
 public class Translator {
+    private String menu(String word, DictTrans dict_t, DictIgnore dict_i) {
+        String result = word;
+
+        System.out.println("There is no translation for the word: " + word);
+        System.out.println("Ignore (i) - Ignore All (h) - Translate as (t)" +
+                           " - Always translate as (s)");
+        
+        Scanner reader = new Scanner(System.in);
+        char ch = reader.next().charAt(0);
+        reader.close();
+
+        if (ch == 'i') {
+            System.out.println("You chose to ignore the word.");
+        }
+        else if (ch == 'h') {
+            System.out.println("You chose to ignore the word, always.");
+            dict_i.add(word);
+        }
+        else if (ch == 't') {
+            System.out.print("You chose to translate the word as: ");
+            Scanner reader2 = new Scanner(System.in);
+            result = reader2.nextLine();
+        }
+        else if (ch == 's') {
+            System.out.print("You chose to translate the word, always, as: ");
+            // readline
+            Scanner reader3 = new Scanner(System.in);
+            String line = reader3.nextLine();
+            reader.close();
+            // cuidado con que guardamos en el diccionario.
+            dict_t.add(word, line);
+            result = line;
+        }
+
+        return result;
+    }
+
     private String translate_word(char[] word, DictTrans dict_t, DictIgnore dict_i) {
         Helpers help = new Helpers();
         word = help.polish_array(word);
@@ -17,7 +55,7 @@ public class Translator {
                 translated_str = word_str;
             }
             else {
-                translated_str = "menu";// menu(word, dict_t, dict_i);
+                translated_str = menu(word_str, dict_t, dict_i);
             }
         }
 
@@ -70,24 +108,51 @@ public class Translator {
 
     public static void main(String args[]) throws IOException {
         String ivalue = "input.txt";
+        String dvalue = "dict_t.txt";
+        String gvalue = "dict_i.txt";
         String ovalue = "output.txt";
         boolean reverse = false;
+        int ch = -1;
 
         // parsear argumentos
+        GetOpt go = new GetOpt(args, "i:d:g:o:r");
+
+        while ((ch = go.getopt()) != go.optEOF) {
+            if ((char)ch == 'i')
+                ivalue = go.optArgGet();
+            else if ((char)ch == 'd')
+                dvalue = go.optArgGet();
+            else if ((char)ch == 'g')
+                gvalue = go.optArgGet();
+            else if ((char)ch == 'o')
+                ovalue = go.optArgGet();
+            else if ((char)ch == 'r')
+                reverse = true;
+            else System.exit(1);
+        }
+
+        // crear dicts
         DictTrans dict_t = new DictTrans(reverse);
         DictIgnore dict_i = new DictIgnore();
 
-        dict_t.load("dict_t.txt");
-        dict_i.load("dict_i.txt");
+        // cargar dicts
+        dict_t.load(dvalue);
+        dict_i.load(gvalue);
 
-        System.out.println("dict_t:");
+        System.out.println(dvalue + ":");
         dict_t.print();
 
-        System.out.println("dict_i:");
+        System.out.println(gvalue + ":");
         dict_i.print();
 
-        System.out.println("Traduciendo campeón...");
+        System.out.println("Translating champ...");
         new Translator().translate(ivalue, ovalue, dict_t, dict_i);
-        System.out.println("Listo.");
+
+        System.out.println("Done.\n\nSaving dictionaries...");
+        dict_t.save(dvalue);
+        dict_i.save(gvalue);
+
+        System.out.println("Done.");
+
     }
 }
