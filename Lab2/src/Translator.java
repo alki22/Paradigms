@@ -14,7 +14,6 @@ public class Translator {
         
         Scanner reader = new Scanner(System.in);
         char ch = reader.next().charAt(0);
-        reader.close();
 
         if (ch == 'i') {
             System.out.println("You chose to ignore the word.");
@@ -25,19 +24,17 @@ public class Translator {
         }
         else if (ch == 't') {
             System.out.print("You chose to translate the word as: ");
-            Scanner reader2 = new Scanner(System.in);
-            result = reader2.nextLine();
+            result = (String)reader.next();
         }
         else if (ch == 's') {
             System.out.print("You chose to translate the word, always, as: ");
             // readline
-            Scanner reader3 = new Scanner(System.in);
-            String line = reader3.nextLine();
-            reader.close();
+            result = (String)reader.next();
             // cuidado con que guardamos en el diccionario.
-            dict_t.add(word, line);
-            result = line;
+            dict_t.add(word, result);
         }
+
+        reader.close();
 
         return result;
     }
