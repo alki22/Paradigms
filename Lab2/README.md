@@ -3,7 +3,7 @@
 ## ¿Qué hicimos?
 
 En este proyecto se nos pidió programar un diccionario en *Java* que dados los archivos de input, output, diccionario de traducciones y diccionario de palabras ignoradas (que no deben ser traducidas), y una flag booleana que nos indica si la traducción debe realizarse de español a inglés o viceversa.
-//Numeros no se traducen
+
 ## ¿Cómo hicimos esto?
 
 Para cumplir nuestra tarea, estructuramos el proyecto de la siguiente manera:
