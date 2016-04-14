@@ -7,6 +7,7 @@ En este proyecto se nos pidió programar un diccionario en *Java* que dados los 
 ## ¿Cómo hicimos esto?
 
 Para cumplir nuestra tarea, estructuramos el proyecto de la siguiente manera:
+
 * **Palabras**: para representar las palabras a traducir utilizamos dos tipos: *arreglo de caracteres* y *String*, dado que en *Java* el tipado no permite una equivalencia entre ellos, contrario a *C*, por ejemplo. El *arreglo de caracteres* se utiliza para aquellas operaciones que precisen recorrer la palabra caracter a caracter, mientras que el *String* es usado para el resto de las operaciones, ya que los diccionarios usan Strings en sus estr... en los próximos items se van a dar cuenta.
 * **Diccionario de palabras ignoradas**: fue implementado utilizando la estructura *ArrayList*, que a diferencia de la lista clásica utiliza almacenamiento dinámico de datos, lo que nos permite añadir, modificar y quitarle elementos.
 * **Diccionario de traducciones**: se hizo mediante el uso de la estructura *TreeMap*, que consiste en un mapeo <Clave, Valor>, que en este caso sería <Palabra, Traducción> (Español-Inglés ó Inglés-Español según el valor de reverse, que también forma parte de la estructura. Este mapeo se caracteriza por preservar el orden de las claves (en este caso orden alfabético) mediante el uso de un *árbol binario de búsqueda* y garantizarnos búsqueda e inserción de elementos en el orden de O(log(n)).
