@@ -103,6 +103,9 @@ public class Translator {
                     ++index;
                     word_buffer[index] = '\0';
                 }
+                else if (ch == '¿' || ch == '¡') {
+                    System.out.println("Found '" + ch + "', ignoring this character.\n");
+                }
                 else {
                     if (index > 0) {
                         String translated = translate_word(word_buffer, dict_t, dict_i);
