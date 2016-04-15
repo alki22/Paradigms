@@ -1,14 +1,16 @@
 # Proyecto 2 : Readme
 
 ## ¿Qué hicimos?
-En este proyecto se nos pidió programar un diccionario en *Java* que dados los archivos de input, output, diccionario de traducciones y diccionario de palabras ignoradas (que no deben ser traducidas), y una flag booleana que nos indica si la traducción debe realizarse de español a inglés o viceversa.
+
+En este proyecto se nos pidió programar un diccionario en *Java* que dados los archivos de input, diccionario de traducciones y diccionario de palabras a ignorar, y una flag booleana que nos indica si la traducción debe realizarse de español a inglés o viceversa.
 
 ## ¿Cómo hicimos esto?
+
 Para cumplir nuestra tarea, estructuramos el proyecto de la siguiente manera:
 
-* **Palabras**: para representar las palabras a traducir utilizamos dos tipos: *arreglo de caracteres* y *String*, dado que en *Java* el tipado no permite una equivalencia entre ellos, contrario a *C*, por ejemplo. El *arreglo de caracteres* se utiliza para aquellas operaciones que precisen recorrer la palabra caracter a caracter, mientras que el *String* es usado para el resto de las operaciones, ya que los diccionarios usan Strings en sus estr... en los próximos items se van a dar cuenta.
-* **Diccionario de palabras ignoradas**: fue implementado utilizando la estructura *ArrayList*, que a diferencia de la lista clásica utiliza almacenamiento dinámico de datos, lo que nos permite añadir, modificar y quitarle elementos.
-* **Diccionario de traducciones**: se hizo mediante el uso de la estructura *TreeMap*, que consiste en un mapeo <Clave, Valor>, que en este caso sería <Palabra, Traducción> Español-Inglés ó Inglés-Español según el valor de reverse, que también forma parte de la estructura. Este mapeo se caracteriza por preservar el orden de las claves (en este caso orden alfabético) mediante el uso de un *árbol binario de búsqueda* y garantizarnos búsqueda e inserción de elementos en el orden de O(log(n)).
+* **Palabras**: para representar las palabras a traducir utilizamos dos tipos: *char[]* y *String*, dado que en *Java* el tipado no permite una equivalencia entre ellos, contrario a *C*, por ejemplo. El **char[]** se utiliza para aquellas operaciones que precisen recorrer la palabra carácter a carácter, mientras que el **String** es usado para el resto de las operaciones, ya que los diccionarios usan Strings.
+* **Diccionario de palabras ignoradas**: fue implementado utilizando la estructura **ArrayList**, que a diferencia de la lista clásica utiliza almacenamiento dinámico de datos, lo que nos permite añadir, modificar y quitarle elementos.
+* **Diccionario de traducciones**: se hizo mediante el uso de la estructura **TreeMap**, que consiste en un mapeo _<Clave, Valor>, que en este caso sería <Palabra, Traducción> Español-Inglés ó Inglés-Español según el valor de reverse, que también forma parte de la estructura. Este mapeo se caracteriza por preservar el orden de las claves (en este caso orden alfabético) mediante el uso de un *árbol binario de búsqueda* y garantizarnos búsqueda e inserción de elementos en el orden de O(log(n)).
 
 ## Sistema de dependencias
 
@@ -35,18 +37,26 @@ Para cumplir nuestra tarea, estructuramos el proyecto de la siguiente manera:
 
 ### ¿Qué cambió con respecto al proyecto anterior?
 
-El principal cambio respecto al proyecto 1 fue el cambio de lenguaje y por ende de paradigma, pasamos de **C**, un lenguaje *imperativo* a **Java**, un lenguaje *orientado a objetos*.
+El principal cambio respecto al proyecto 1 fue el cambio de lenguaje y por ende de paradigma, pasamos de **C**, un lenguaje *imperativo*, a **Java**, un lenguaje *orientado a objetos*.
 
 ### Lo bueno:
 
-* Nos tomó muchas menos lineas de código(o sea, menos tiempo)  hacer el proyecto.
-* El hecho de ser Java un lenguaje de alto nivel de abstracción, o al menos alto respecto a C nos facilitó encontrar y entender métodos para casi todas las tareas, ya sea en las librerías definidas en el lenguaje (referencias en la web de **Oracle**) o en *StackOverflow*.
-* Aprendimos que es evidente que Java es el lenguaje industrial por excelencia, debido a su portabilidad (JVM compatible con múltiples dispositivos), su alto nivel de abstracción e implementaciones que hacen intuitivo su aprendizaje (p.e. el garbage collector).
+* Nos tomó muchas menos lineas de código hacer el proyecto:
+
+  | Count         | Java    | Java w/o GetOpt | C       |
+  | ------------- | -------:| ---------------:| -------:|
+  | Lines         | 634     | 352             | 1015    |
+  | Words         | 2043    | 994             | 2742    |
+  | Characters    | 19615   | 10870           | 24947   |
+
+* El hecho de ser Java un lenguaje de un alto nivel de abstracción, nos facilitó encontrar y entender métodos para casi todas las tareas, ya sea en las librerías definidas en el lenguaje.
+* Tuvimos que usar mucho el sitio de **Oracle** y **StackOverflow**, lo que al principio nos pareció "pesado", pero mostró ser una habilidad útil, considerando que estamos satisfechos con el laboratorio que logramos hacer.
+* Nos percatamos de que Java, con su alto nivel de abstracción, y otras herramientas como el *Garbage Collector*, permite ser aprendido rapidamente (ya sabiendo C).
 
 ### Lo malo:
 
 * La sintaxis puede ser confusa a veces para aquellos que venimos del **viejo y glorioso C**.
-* El tipado nos obliga en ocasiones a realizar conversiones o casteos que en C serían innecesarios. El caso más puntual es el de *char[]* y *String*, que en este lenguaje no son equivalentes.
+* El tipado nos obliga en ocasiones a realizar conversiones o casteos que en C serían innecesarios. El caso más puntual es el de **char[]** y **String**, que en este lenguaje no son equivalentes.
 
 Pero igualmente la pasamos bien y aprendimos un nuevo lenguaje que en el mercado actual nos sirve para conseguir trabajo.
 
@@ -57,25 +67,17 @@ Pero igualmente la pasamos bien y aprendimos un nuevo lenguaje que en el mercado
 
 ### Compilación:
 
-Para compilar los **.class** hacemos:
-```sh
-$ make
-```
-
-Y para hacer el **jar**:
-```sh
-$ make jar
-```
+Para compilar los **.class** y un **.jar** hacemos `make`
 
 ### Ejecución:
 
 Existen 2 casos:
 
-#### Ejecutar los **.class**
+##### Ejecutar los **.class**
 
 Caso en el que uno se debe *parar* el el directorio **bin** y ejectuar `java Translator` y las respectivas opciones.
 
-#### Ejectuar el **jar**
+##### Ejectuar el **jar**
 
 Nos volvemos a situar en **bin** y ejecutamos `jara -jar translator.jar` y las respectivas opciones.
 
