@@ -146,6 +146,22 @@ public class Translator {
                 reverse = true;
             else System.exit(1);
         }
+        File input = new File(ivalue);
+        File dictt = new File(dvalue);
+        File dictg = new File(gvalue);
+
+        if(!input.exists()) {
+            System.out.println("Input file is non existant.");
+            System.exit(1);
+        }
+        if (!dictt.exists()){
+            System.out.println("Created empty translation dictionary.");
+            dictt.createNewFile();
+        }
+        if (!dictg.exists()){
+            System.out.println("Created empty ignore-words dictionary.");
+            dictg.createNewFile();
+        }
 
         // crear dicts
         DictTrans dict_t = new DictTrans(reverse);
