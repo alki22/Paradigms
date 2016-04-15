@@ -1,7 +1,7 @@
 JFLAGS = -g -cp src/
 JC = javac
 JAR = jar
-JARFLAGS = cvfe
+JARFLAGS = cfe
 DEST = -d bin/
 
 JAVAS = \
@@ -11,16 +11,18 @@ JAVAS = \
 	src/helpers/GetOpt.java \
 	src/helpers/Helpers.java \
 	
-CLASSES = \
+BINCLASSES = \
 	bin/Translator.class \
 	bin/translator/DictTrans.class \
 	bin/translator/DictIgnore.class \
 	bin/helpers/GetOpt.class \
 	bin/helpers/Helpers.class \
 
-default: $(JAVAS)
-	$(JC) $(JFLAGS) $(DEST) $(JAVAS)
-	
-jar: $(CLASSES)
-	$(JAR) $(JARFLAGS) translator.jar $(CLASSES)
-	
+jar: $(BINCLASSES)
+	cd bin; $(JAR) $(JARFLAGS) translator.jar Translator *
+
+bin/Translator.class: $(JAVAS)
+	mkdir -p bin; $(JC) $(JFLAGS) $(DEST) src/Translator.java
+
+clean:
+	rm -rf bin/
