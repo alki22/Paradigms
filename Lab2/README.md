@@ -1,3 +1,4 @@
+---
 # Proyecto 2 : Readme
 
 ## ¿Qué hicimos?
