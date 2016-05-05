@@ -19,7 +19,9 @@ La aplicación deberá mostrar únicamente los feeds a los que el usuario se hay
 suscripto. Para eso, cada usuario deberá identificarse. La aplicación deberá
 proveer un método para que el usuario se registre por primera vez y para que se
 autentique cada vez que quiera entrar de vuelta. El registro y logeo deberán
-ser llevados a cabo de las APIs OAuth de Google y GitHub.
+ser llevados a cabo de las APIs OAuth de
+[Google](https://developers.google.com/identity/protocols/OpenIDConnect#setredirecturi) y
+[GitHub](https://developer.github.com/v3/oauth/).
 
 El backend de la aplicación estará escrito en Python mediante el framework
 Flask, con ayuda de algunas librerías extra para el trabajo de OAuth y la
@@ -177,6 +179,8 @@ tendrán en cuenta si los requerimientos del laboratorio ya han sido cumplidos_:
   corrección PEP8 en tiempo real, etc.
 * Leer algunos (preferentemente todos) los siguientes links, son de mucha
   ayuda:
+    * [Documentación de OAuth de Google](https://developers.google.com/identity/protocols/OpenIDConnect#setredirecturi)
+    * [Documentación de OAuth de Github](https://developer.github.com/v3/oauth/)
     * [Flask](http://flask.pocoo.org/docs/0.10/tutorial/), tutorial básico de
       Flask.
     * [OAuth Authentication with
