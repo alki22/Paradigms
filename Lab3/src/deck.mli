@@ -1,4 +1,4 @@
 type deck
 
-val listDeleteElem : deck -> int -> deck
-val deckGetCard : deck -> card * deck
+val deckGetSingleCard : deck -> card * deck
+val deckGetMultipleCards : deck -> int -> deck * deck

@@ -1,41 +1,46 @@
 open Random
 open List
+open ListHelpers
 
-type card = string
+type card = string * int
 type deck = card list
 
-let deckFull = ["B1";"B2";"B3";"B4";"B5";"B6";"B7";"B8";"B9";"B10";"B11";"B12";
-                "C1";"C2";"C3";"C4";"C5";"C6";"C7";"C8";"C9";"C10";"C11";"C12";
-                "E1";"E2";"E3";"E4";"E5";"E6";"E7";"E8";"E9";"E10";"E11";"E12";
-                "O1";"O2";"O3";"O4";"O5";"O6";"O7";"O8";"O9";"O10";"O11";"O12";
-                "SID";"SSWAP";"SMAX";"SMIN";"STOP";"SPAR"]
+let deckFull = [("B",1);("B",2);("B",3);("B",4);("B",5);("B",6);("B",7);("B",8);("B",9);("B",10);("B",11);("B",12);
+                ("C",1);("C",2);("C",3);("C",4);("C",5);("C",6);("C",7);("C",8);("C",9);("C",10);("C",11);("C",12);
+                ("E",1);("E",2);("E",3);("E",4);("E",5);("E",6);("E",7);("E",8);("E",9);("E",10);("E",11);("E",12);
+                ("O",1);("O",2);("O",3);("O",4);("O",5);("O",6);("O",7);("O",8);("O",9);("O",10);("O",11);("O",12);
+                ("SID",0);("SSWAP",0);("SMAX",0);("SMIN",0);("STOP",0);("SPAR",0)]
 
-(* l -> lista, s -> donde voy guardando la nueva lista, k -> posicion a borrar *)
-let rec listDeleteElemAux l s k =
-    match l with
-    | [] -> []
-    | x :: xs -> if k == 0 then
-                    s @ xs
-                else
-                    listDeleteElemAux xs (s @ [x]) (k - 1)
-
-let listDeleteElem l k =
-    listDeleteElemAux l [] k
-
-(* c -> lista de cartas, k -> posicion de la carta *)
-let rec deckGetCardAux c k =
+(* Devuelve la K-ésima carta del mazo dado *)
+let rec deckGetSingleCardAux (c : deck) (k : int) =
     match c with
-    | [] -> ""
+    | [] -> failwith "ERROR: Not enough cards."
     | x :: xs -> if k == 0 then
                     x
                 else
                     deckGetCardAux xs (k - 1)
 
-let deckGetCard c =
-    let l = List.length c in
+(* Dada una lista devuelve una tupla conformada por una carta aleatoria y la lista sin dicha carta *)
+let deckGetSingleCard (d : deck) =
+    let l = List.length d in
     if (l == 0) then
-        None
+        failwith "ERROR: Not enough cards."
     else
         let r = Random.int l in
-        let x = deckGetCardAux c r in (* Esta carta va a algún lado *)
-        Some (x,listDeleteElem c r)
+        let x = deckGetCardAux d r in
+        (x, listDeleteElem d r)
+
+(* Pre: hay suficientes cartas *)
+let rec deckGetMultipleCardsAux (d : deck) (n : int) (s : deck) =
+    if n = 0 then (d,s)
+    else begin
+        let c = (deckGetCard d) in
+        let s = fst c :: s in
+        deckGetNCardsAux (snd c) (n - 1) s
+    end
+
+(* Conseguimos n cartas del mazo d, devolviendo una tupla con las n cartas y el mazo sin ellas *)
+let deckGetMultipleCards (d : deck) (n : int) =
+    let l = List.length d in
+    if l < n then failwith "ERROR: Not enough cards."
+    else deckGetNCardsAux d n []
