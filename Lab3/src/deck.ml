@@ -33,9 +33,9 @@ let rec deckGetCardAux c k =
 
 let deckGetCard c =
     let l = List.length c in
-        if (l == 0) then
-            ("",[])
-        else
-            let r = Random.int (List.length c) in
-                let x = deckGetCardAux c r in (* Esta carta va a algún lado *)
-                    (x,listDeleteElem c r)
+    if (l == 0) then
+        None
+    else
+        let r = Random.int l in
+        let x = deckGetCardAux c r in (* Esta carta va a algún lado *)
+        Some (x,listDeleteElem c r)
