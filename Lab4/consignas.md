@@ -128,9 +128,7 @@ formateados en el HTML.
    facilitar la implementación. Dicha base de datos **NO DEBE** ser subida con
    el resto de los archivos fuente. De igual manera, el entorno virtual, de ser
    creado, **NO DEBE** subirse al repositorio.
-   
-   * Se les proporcionarán los settings básicos para alcanzar dicho sistema.
-
+    * Se les proporcionarán los settings básicos para alcanzar dicho sistema.
 5. Se deberá crear un archivo README, donde se explicará: las decisiones de
    diseño que tomaron, las dependencias que se tienen (si no son las listadas
    arriba), de donde instalarlas (en caso de que no pueda instalarse via
