@@ -123,6 +123,7 @@ formateados en el HTML.
     * El subdirectorio `static/` contiene los archivos estáticos, como pueden
       ser archivos javascript y/o css. No se recomienda tocar este directorio
       porque puede desconfigurarse la UI.
+
 4. Se deberá contar con una base de datos en formato sqlite (archivo .db) para
    facilitar la implementación. Dicha base de datos **NO DEBE** ser subida con
    el resto de los archivos fuente. De igual manera, el entorno virtual, de ser
