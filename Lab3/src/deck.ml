@@ -54,7 +54,21 @@ let deckGetMultipleCards (deck : deck) (n : int) =
     if l < n then failwith "ERROR: Not enough cards."
     else deckGetMultipleCardsAux deck n []
 
+(* Combinamos dos mazos *)
 let rec combineDecks (deck1 : deck) (deck2: deck) =
     match deck1 with
     | [] -> deck2
     | x :: xs -> combineDecks xs (x :: deck2)
+
+(* Devuelve la máxima carta *)
+let maxCard (card1 : card) (card2 : card) =
+    if (snd card1) > (snd card2) then card1
+    else if (snd card1) < (snd card2) then card2
+    else
+        begin
+        if (fst card1) = "E" then card1
+        else if (fst card2) = "E" then card2
+        else if (fst card1) = "B" then card1
+        else if (fst card2) = "B" then card2
+        else if (fst card1) = "O" then card1
+        else card2

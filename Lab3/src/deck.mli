@@ -13,3 +13,5 @@ val deckGetMultipleCards : deck -> int -> deck * deck
 
 (* Concatena dos decks *)
 val combineDecks : deck -> deck -> deck
+
+val maxCard : card -> card -> card

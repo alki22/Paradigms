@@ -16,9 +16,12 @@ let playerAdd (card : card) (player : player) =
     {player with cards = card :: player.cards}
 
 let playerPlay (player : player) =
-    let playerDeck = player.cards in
     printf "Que carta vas a jugar %s?" player.name;
     let input = read_int() in
-    let r = deckGetSingleSpecificCard playerDeck input in
-    let {player with cards = (fst r)} in
-    (player, snd r)
+    let playerDeck = player.cards in
+    let (playerDeck, card) = deckGetSingleSpecificCard playerDeck input in
+    if (fst card) = s then algo
+    else begin
+        let {player with cards = playerDeck} in
+        (player, card))
+    end
