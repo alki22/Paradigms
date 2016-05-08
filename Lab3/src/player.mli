@@ -1,4 +1,6 @@
-type player
+open Deck
+
+type player = { name : string; points : int; cards : deck; }
 
 (* Crea un nuevo jugador con un nombre *)
 val playerNew : string -> player

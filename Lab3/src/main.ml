@@ -2,31 +2,34 @@ open Deck
 open Player
 open Pervasives
 open Printf
+open Round
 
 exception NotEnoughPlayers
 
-let addPlayer =
+let readPlayer () =
     let name = read_line() in
     if name = "EXIT" then (0,"EXIT")
     else (1,name)
 
 let rec getPlayers (s : player list) =
-    let got = addPLayer() in
-    match got with
+    let player = readPlayer() in
+    match player with
     | (0,_) -> s
     | (1,name) ->   let s = (playerNew name) :: s in
-                    getPlayers s
+                    getPlayers s 
+    | (_,_) -> failwith "ERROR: Added player has an issue"
 
-let dealPlayer (player : player) (deck : deck) =
-    let s = deckGetMultipleCards d 7 in
-    ((fst s),{player with cards = (snd s) @ player.cards})
+let dealPlayer (deck : deck) (player : player) =
+    let s = deckGetMultipleCards deck 7 in
+    let concat = combineDecks (snd s) player.cards in
+    ((fst s),{player with cards = concat})
 
-let dealAllPlayers (players : player list) (deck : deck) (s : player list) =
+let rec dealAllPlayers (deck : deck) (players : player list) (mapped : player list) =
     match players with
-    | [] -> (s, deck)
-    | x :: xs ->    let m = dealPlayer x d in
-                    let s = s @ [snd m] in
-                    dealAllPlayers xs (fst m) s
+    | [] -> (deck, mapped)
+    | x :: xs ->    let s = dealPlayer deck x in
+                    let mapped = mapped @ [snd s] in
+                    dealAllPlayers (fst s) xs mapped
                     
 
 let _ =
@@ -36,6 +39,8 @@ let _ =
         raise NotEnoughPlayers
     else
         (* Repartimos las cartas *)
-        let (players, deck) = dealAllPlayers players deckFull in
+        let tmp = dealAllPlayers deckFull players [] in
+        let players = snd tmp in
+        let deck = fst tmp in
         (* JUGAMOS *)
-        play players deck
+        1

@@ -1,6 +1,6 @@
-open Random
-open List
 open ListHelpers
+open List
+open Random
 
 type card = string * int
 type deck = card list
@@ -18,7 +18,7 @@ let rec deckGetSingleCardAux (c : deck) (k : int) =
     | x :: xs -> if k == 0 then
                     x
                 else
-                    deckGetCardAux xs (k - 1)
+                    deckGetSingleCardAux xs (k - 1)
 
 (* Dada una lista devuelve una tupla conformada por una carta aleatoria y la lista sin dicha carta *)
 let deckGetSingleCard (d : deck) =
@@ -27,20 +27,34 @@ let deckGetSingleCard (d : deck) =
         failwith "ERROR: Not enough cards."
     else
         let r = Random.int l in
-        let x = deckGetCardAux d r in
-        (x, listDeleteElem d r)
+        let x = deckGetSingleCardAux d r in
+        (listDeleteElem d r, x)
+
+(* Dada una lista devuelve una tupla conformada por una carta aleatoria y la lista sin dicha carta *)
+let deckGetSingleSpecificCard (d : deck) (k : int) =
+    let l = List.length d in
+    if (l == 0) then
+        failwith "ERROR: Not enough cards."
+    else
+        let x = deckGetSingleCardAux d k in
+        (listDeleteElem d k, x) 
 
 (* Pre: hay suficientes cartas *)
-let rec deckGetMultipleCardsAux (d : deck) (n : int) (s : deck) =
-    if n = 0 then (d,s)
+let rec deckGetMultipleCardsAux (deck : deck) (n : int) (s : deck) =
+    if n = 0 then (deck,s)
     else begin
-        let c = (deckGetCard d) in
-        let s = fst c :: s in
-        deckGetNCardsAux (snd c) (n - 1) s
+        let c = (deckGetSingleCard deck) in
+        let s = (snd c) :: s in
+        deckGetMultipleCardsAux (fst c) (n - 1) s
     end
 
-(* Conseguimos n cartas del mazo d, devolviendo una tupla con las n cartas y el mazo sin ellas *)
-let deckGetMultipleCards (d : deck) (n : int) =
-    let l = List.length d in
+(* Conseguimos n cartas del mazo d, devolviendo una tupla con el mazo y las cartas retiradas *)
+let deckGetMultipleCards (deck : deck) (n : int) =
+    let l = List.length deck in
     if l < n then failwith "ERROR: Not enough cards."
-    else deckGetNCardsAux d n []
+    else deckGetMultipleCardsAux deck n []
+
+let rec combineDecks (deck1 : deck) (deck2: deck) =
+    match deck1 with
+    | [] -> deck2
+    | x :: xs -> combineDecks xs (x :: deck2)
