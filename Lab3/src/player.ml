@@ -1,19 +1,19 @@
 open Deck
 open Printf
 
-type player = { name : string; points : int; cards : deck; }
+type player = { name : string; points : int; cards : deck; thrown : card list }
 
-let playerNew (name : string) = {name = name; points = 0; cards = []}
-
-let playerHand (player : player) =
-    let cards = player.cards in
-    let length = List.length cards in
-    match cards with
-    | [] ->
-    | x :: xs ->    
+let playerNew (name : string) = {name = name; points = 0; cards = []; thrown = [] }
 
 let playerAdd (card : card) (player : player) =
     {player with cards = card :: player.cards}
+
+let playerGive (player : player) (card : card) =
+    if (elemInList player.deck card) then
+        {player with cards = deckCardDelete player.cards card}
+    else
+    
+
 
 let playerPlay (player : player) =
     printf "Que carta vas a jugar %s?" player.name;

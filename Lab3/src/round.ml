@@ -13,6 +13,10 @@ let rec playAux (players : player list) (table : (player * card) list) =
                     let table = r :: table in
                     playAux xs table
 
-let play (players : player list) =
+let rec round (players : player list) =
     let table = playAux players [] in
-    let winner = maxPlayer table in
+    let table = processWinner table in (* give point *)
+    (* Refrescamos players *)
+    let players = refreshPlayers table
+    (* Vemos si alguién ya terminó *)
+    let players

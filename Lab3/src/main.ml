@@ -43,4 +43,4 @@ let _ =
         let players = snd tmp in
         let deck = fst tmp in
         (* JUGAMOS *)
-        1
+        round players
