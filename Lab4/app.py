@@ -3,7 +3,6 @@
 import settings
 
 from flask import Flask
-from flask import render_template
 from playhouse.flask_utils import FlaskDB
 
 app = Flask(__name__)
