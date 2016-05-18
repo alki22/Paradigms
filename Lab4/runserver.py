@@ -13,8 +13,6 @@ def hello():
 # Capaz(?)
 @app.route("/logout")
 def logout():
-    global current_user
-    current_user = None
     return redirect(url_for('login'))
 
 @app.route("/login")
@@ -34,7 +32,7 @@ def new_feed():
 def index():
     import ipdb; ipdb.set_trace()
     social_id = request.args.get("social_id")
-    current_user = User.select().where(User.social_id == social_id)
+    current_user = User.select().where(User.social_id == social_id).get()
     return render_template('index.html', current_user=current_user)
 
 @app.route("/create/<nickname>-<social_id>")
