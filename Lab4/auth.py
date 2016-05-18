@@ -45,7 +45,4 @@ def authorized():
     except:
         user = User.create(nickname = str(me.data['name']), social_id = str(me.data['login']))
 
-    global current_user
-    current_user = user
-
-    return redirect(url_for('index'))
+    return redirect(url_for('index', social_id=str(me.data['login'])))

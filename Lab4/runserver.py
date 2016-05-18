@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from app import app
-from app import database
+from app import app, database
+from auth import *
 from flask import render_template, request
 from models import *
 from playhouse.flask_utils import get_object_or_404
@@ -10,19 +10,32 @@ from playhouse.flask_utils import get_object_or_404
 def hello():
     return "Hello, World!"
 
+# Capaz(?)
+@app.route("/logout")
+def logout():
+    global current_user
+    current_user = None
+    return redirect(url_for('login'))
+
 @app.route("/login")
 def login():
     provider = request.args.get("provider")
     if provider == 'google':
-        return "Hello, Google!"
+        return 'Hello, Google!'
+    elif provider == 'github':
+        return login_github()
     return render_template('login.html')
 
-#@app.route("/login")
-#@app.route("/login?provider=<provider>")
-#def login(provider = None):
-#    if provider == 'google':
-#        return "Hello, Google!"
-#    return render_template('login.html')
+@app.route("/new_feed")
+def new_feed():
+    return render_template('newfeed.html')
+
+@app.route("/index")
+def index():
+    import ipdb; ipdb.set_trace()
+    social_id = request.args.get("social_id")
+    current_user = User.select().where(User.social_id == social_id)
+    return render_template('index.html', current_user=current_user)
 
 @app.route("/create/<nickname>-<social_id>")
 def create(nickname, social_id):
