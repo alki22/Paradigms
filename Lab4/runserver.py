@@ -12,8 +12,6 @@ from models import *
 
 @app.route("/")
 def root():
-    import ipdb;
-    ipdb.set_trace()
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     else:
@@ -84,12 +82,15 @@ def new_feed():
         d = feedparser.parse(url)
         feed = Feed.select().where(Feed.url == url)
         if len(feed) == 0:
-            feed = Feed.create(url=url, title=d['feed']['title'],
-                               description=d['feed']['description'],
-                               user=current_user.id)
+            Feed.create(url=url, title=d['feed']['title'],
+                        description=d['feed']['description'],
+                        user=current_user.id)
             return render_template('index.html')
-
-    return render_template('newfeed.html')
+        else:
+            return render_template('newfeed.html',
+                                   error_message='Feed is already present!')
+    else:
+        return render_template('newfeed.html')
 
 
 @app.route("/rss")
