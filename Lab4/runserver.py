@@ -1,76 +1,110 @@
 # -*- coding: utf-8 -*-
 
 import feedparser
+from flask import render_template, request, redirect, url_for, session
+from flask.ext.login import logout_user, current_user, \
+    login_required, login_user
 
-from app import app, database, login_manager
-from auth import *
-from flask import render_template, request, session
+from app import app, database
+from auth import login_github, github
 from models import *
-from playhouse.flask_utils import get_object_or_404
-from flask.ext.login import login_user, logout_user, current_user, login_required
 
 
 @app.route("/")
-def hello():
-    return "Hello, World!"
+def root():
+    import ipdb;
+    ipdb.set_trace()
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('login'))
 
-# Capaz(?)
-@app.route("/logout")
+
+@app.route("/delete_feed")
 @login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
+def delete_feed():
+    feed_id = request.args.get('feed')
+    feed = Feed.get(Feed.id == feed_id)
+    feed.delete_instance()
+    return redirect(url_for('index'))
+
+
+@app.route("/index")
+@login_required
+def index():
+    return render_template('index.html')
+
 
 @app.route("/login")
 def login():
-    provider = request.args.get("provider")
+    provider = request.args.get('provider')
     if provider == 'google':
         return 'Hello, Google!'
     elif provider == 'github':
         return login_github()
     return render_template('login.html')
 
-@app.route("/delete_feed")
-def delete_feed():
-    return "Miameee"
+
+@app.route('/login/authorized_github')
+def authorized_github():
+    resp = github.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error'],
+            request.args['error_description']
+        )
+    session['github_token'] = (resp['access_token'], '')
+    me = github.get('user')
+
+    # Check if user already exists, if it doesn't, create it.
+    user = User.select().where(User.social_id == me.data['login'])
+    if len(user) == 0:
+        user = User.create(nickname=me.data['name'],
+                           social_id=me.data['login'])
+    else:
+        user = user[0]
+
+    login_user(user, True)
+
+    return redirect(url_for('index'))
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 
 @app.route("/new_feed", methods=['GET', 'POST'])
 @login_required
 def new_feed():
-    import ipdb; ipdb.set_trace()
     if request.method == 'POST':
         url = request.form['feed_url']
         d = feedparser.parse(url)
         feed = Feed.select().where(Feed.url == url)
         if len(feed) == 0:
-            feed = Feed.create(url = url, title = d['feed']['title'], description = d['feed']['subtitle'], user = current_user.id)
+            feed = Feed.create(url=url, title=d['feed']['title'],
+                               description=d['feed']['description'],
+                               user=current_user.id)
             return render_template('index.html')
 
     return render_template('newfeed.html')
 
-@app.route("/index")
-@login_required
-def index():
-    # index uses current_user.
-    return render_template('index.html')
-
-@app.route("/create/<nickname>-<social_id>")
-def create(nickname, social_id):
-    user = User.create(nickname=nickname,social_id=social_id)
-    return "<h1>{}</h1>".format(user.nickname)
-
-@app.route("/read/<social_id>")
-def read(social_id):
-    user = get_object_or_404(User.select(), User.social_id==social_id)
-    return "<h1>{}</h1>".format(user.nickname)
 
 @app.route("/rss")
+@login_required
 def rss():
-    return "Miameee"
+    feed_id = request.args.get('feed')
+    feed = Feed.get(Feed.id == feed_id)
+    d = feedparser.parse(feed.url)
+    return render_template('rss.html', entries=d.entries, feed=feed)
+
 
 def main():
     database.create_tables([User, Feed], safe=True)
     app.run()
+
 
 if __name__ == "__main__":
     main()
