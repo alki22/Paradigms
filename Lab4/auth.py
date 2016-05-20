@@ -13,12 +13,12 @@ logged_user = None
 ## Flask-Login
 
 @login_manager.user_loader
-def load_user(social_id):
+def load_user(uid):
     try:
-        user = User.select().where(User.social_id == social_id).get()
-    except:
-        user = None
-
+        return User.get(User.id == uid)
+    except User.DoesNotExist:
+        session.clear()
+        return AnonymousUser()
 
 
 ## OAuth Github
@@ -53,11 +53,13 @@ def authorized():
     session['github_token'] = (resp['access_token'], '')
     me = github.get('user')
 
-    import ipdb; ipdb.set_trace()
-
     # Check if user already exists, if it doesn't, create it.
-    user = load_user(str(me.data['login']))
-    if user == None:
-        user = User.create(nickname = str(me.data['name']), social_id = str(me.data['login']))
+    user = User.select().where(User.social_id == me.data['login'])
+    if len(user) == 0:
+        user = User.create(nickname = me.data['name'], social_id = me.data['login'])
+    else:
+        user = user[0]
+
+    login_user(user, True)
 
     return redirect(url_for('index'))

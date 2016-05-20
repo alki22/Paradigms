@@ -34,7 +34,7 @@ def new_feed():
     return render_template('newfeed.html')
 
 @app.route("/index")
-#@login_required
+@login_required
 def index():
     # index uses current_user.
     return render_template('index.html')
