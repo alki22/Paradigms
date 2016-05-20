@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from app import app, database
+from app import app, database, login_manager
 from auth import *
-from flask import render_template, request
+from flask import render_template, request, session
 from models import *
 from playhouse.flask_utils import get_object_or_404
+from flask.ext.login import login_user, logout_user, current_user, login_required
+
 
 @app.route("/")
 def hello():
@@ -12,7 +14,9 @@ def hello():
 
 # Capaz(?)
 @app.route("/logout")
+@login_required
 def logout():
+    logout_user()
     return redirect(url_for('login'))
 
 @app.route("/login")
@@ -25,15 +29,15 @@ def login():
     return render_template('login.html')
 
 @app.route("/new_feed")
+@login_required
 def new_feed():
     return render_template('newfeed.html')
 
 @app.route("/index")
+#@login_required
 def index():
-    import ipdb; ipdb.set_trace()
-    social_id = request.args.get("social_id")
-    current_user = User.select().where(User.social_id == social_id).get()
-    return render_template('index.html', current_user=current_user)
+    # index uses current_user.
+    return render_template('index.html')
 
 @app.route("/create/<nickname>-<social_id>")
 def create(nickname, social_id):
