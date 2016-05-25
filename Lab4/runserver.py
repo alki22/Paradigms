@@ -6,7 +6,7 @@ from flask.ext.login import logout_user, current_user, \
     login_required, login_user
 
 from app import app, database
-from auth import login_github, github
+from auth import login_github, github, login_google, google
 from models import *
 
 
@@ -37,7 +37,7 @@ def index():
 def login():
     provider = request.args.get('provider')
     if provider == 'google':
-        return 'Hello, Google!'
+        return login_google()
     elif provider == 'github':
         return login_github()
     return render_template('login.html')
@@ -66,6 +66,28 @@ def authorized_github():
 
     return redirect(url_for('index'))
 
+@app.route('/login/authorized_google')
+def authorized_google():
+    resp = google.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error'],
+            request.args['error_description']
+        )
+    session['google_token'] = (resp['access_token'], '')
+    me = google.get('userinfo')
+    
+    
+    user = User.select().where(User.social_id == me.data['email'])
+    if len(user) == 0:
+        user = User.create(nickname=me.data['name'],
+                           social_id=me.data['email'])
+    else:
+        user = user[0]
+
+    login_user(user, True)
+
+    return redirect(url_for('index'))
 
 @app.route("/logout")
 @login_required
