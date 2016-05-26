@@ -12,8 +12,10 @@ logged_user = None
 
 ## Credentials
 
-GOOGLE_CLIENT_ID='398696822913-li49jael4ks916e4rdd28jh7uir9mh71.apps.googleusercontent.com'
-GOOGLE_CLIENT_SECRET='FggQmkRIkOsiZQIt0ITLiEiN'
+GITHUB_CLIENT_ID = '6a39f5c1520738d60f5d'
+GITHUB_CLIENT_SECRET = '12429b0eeb2c3a53e17e9129e8fead61a9237c75'
+GOOGLE_CLIENT_ID = '398696822913-li49jael4ks916e4rdd28jh7uir9mh71.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = 'FggQmkRIkOsiZQIt0ITLiEiN'
 
 ## Flask-Login
 
@@ -30,10 +32,10 @@ def load_user(uid):
 
 github = oauth.remote_app(
     'github',
-    consumer_key='6a39f5c1520738d60f5d',
-    consumer_secret='12429b0eeb2c3a53e17e9129e8fead61a9237c75',
+    consumer_key=GITHUB_CLIENT_ID,
+    consumer_secret=GITHUB_CLIENT_SECRET,
     request_token_params={'scope': 'user:email'},
-    base_url ='https://api.github.com/',
+    base_url='https://api.github.com/',
     request_token_url=None,
     access_token_method='POST',
     access_token_url='https://github.com/login/oauth/access_token',
@@ -65,12 +67,12 @@ google = oauth.remote_app(
     consumer_secret=GOOGLE_CLIENT_SECRET
 )
 
+
 @google.tokengetter
-def get_google_token(token = None):
+def get_google_token(token=None):
     return session.get('google_token')
+
 
 def login_google():
     return google.authorize(
-        callback = url_for('authorized_google', _external=True))
-
-    
+        callback=url_for('authorized_google', _external=True))

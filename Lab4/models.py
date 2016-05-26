@@ -26,5 +26,3 @@ class Feed(flask_db.Model):
     title = CharField()
     url = CharField()
     description = CharField()
-
-

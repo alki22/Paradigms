@@ -66,6 +66,7 @@ def authorized_github():
 
     return redirect(url_for('index'))
 
+
 @app.route('/login/authorized_google')
 def authorized_google():
     resp = google.authorized_response()
@@ -89,6 +90,7 @@ def authorized_google():
     login_user(user, True)
 
     return redirect(url_for('index'))
+
 
 @app.route("/logout")
 @login_required
@@ -120,6 +122,7 @@ def new_feed():
                                    error_message='Feed is already present!')
     else:
         return render_template('newfeed.html')
+
 
 @app.route("/rss")
 @login_required
