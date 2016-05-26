@@ -76,12 +76,13 @@ def authorized_google():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
-    
-    
+
+    # Check if user already exists, if it doesn't, create it.
     user = User.select().where(User.social_id == me.data['email'])
     if len(user) == 0:
         user = User.create(nickname=me.data['name'],
-                           social_id=me.data['email'])
+                           social_id=me.data['email'],
+                           email=me.data['email'])
     else:
         user = user[0]
 
@@ -102,18 +103,23 @@ def new_feed():
     if request.method == 'POST':
         url = request.form['feed_url']
         d = feedparser.parse(url)
-        feed = Feed.select().where(Feed.url == url)
-        if len(feed) == 0:
+
+        feeds = Feed.select().where(Feed.user == current_user.id)
+        has_feed = False
+        for feed in feeds:
+            if feed.url == url:
+                has_feed = True
+
+        if not has_feed:
             Feed.create(url=url, title=d['feed']['title'],
                         description=d['feed']['description'],
                         user=current_user.id)
-            return render_template('index.html')
+            return redirect(url_for('index'))
         else:
             return render_template('newfeed.html',
                                    error_message='Feed is already present!')
     else:
         return render_template('newfeed.html')
-
 
 @app.route("/rss")
 @login_required
