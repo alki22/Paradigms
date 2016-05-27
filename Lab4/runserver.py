@@ -45,10 +45,8 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/login/authorized')
-def authorized():
-    provider = request.args.get('provider')
-
+@app.route('/login/authorized/<provider>')
+def authorized(provider):
     if provider == 'github':
         resp = github.authorized_response()
     elif provider == 'google':
