@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import url_for, session
+from flask import url_for, session, request
 from flask_oauthlib.client import OAuth
 
 from app import app, login_manager
@@ -12,10 +12,13 @@ logged_user = None
 
 ## Credentials
 
+FACEBOOK_CLIENT_ID = '1635647113427550'
+FACEBOOK_CLIENT_SECRET = '2875d46f86d7f4d0334dfd268d11ed6d'
 GITHUB_CLIENT_ID = '6a39f5c1520738d60f5d'
 GITHUB_CLIENT_SECRET = '12429b0eeb2c3a53e17e9129e8fead61a9237c75'
 GOOGLE_CLIENT_ID = '398696822913-li49jael4ks916e4rdd28jh7uir9mh71.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = 'FggQmkRIkOsiZQIt0ITLiEiN'
+
 
 ## Flask-Login
 
@@ -26,6 +29,36 @@ def load_user(uid):
     except User.DoesNotExist:
         session.clear()
         return AnonymousUser()
+
+
+## Facebook's OAuth
+
+facebook = oauth.remote_app(
+    'facebook',
+    consumer_key=FACEBOOK_CLIENT_ID,
+    consumer_secret=FACEBOOK_CLIENT_SECRET,
+    request_token_params={'scope': 'email'},
+    base_url='https://graph.facebook.com/',
+    request_token_url=None,
+    access_token_method='GET',
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth'
+)
+
+
+@facebook.tokengetter
+def get_facebook_token(token=None):
+    return session.get('oauth_token')
+
+
+def login_facebook():
+    callback = url_for(
+        'authorized',
+        next=request.args.get('next') or request.referrer or None,
+        provider='facebook',
+        _external=True
+    )
+    return facebook.authorize(callback=callback)
 
 
 ## Github's OAuth

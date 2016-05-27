@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import feedparser
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, flash
 from flask.ext.login import logout_user, current_user, \
     login_required, login_user
 
 from app import app, database
-from auth import login_github, github, login_google, google
+from auth import login_github, github, login_google, google, login_facebook, facebook
 from models import *
 
 
@@ -40,6 +40,8 @@ def login():
         return login_google()
     elif provider == 'github':
         return login_github()
+    elif provider == 'facebook':
+        return login_facebook()
     return render_template('login.html')
 
 
@@ -51,9 +53,8 @@ def authorized():
         resp = github.authorized_response()
     elif provider == 'google':
         resp = google.authorized_response()
-    else:
-        flash('Invalid provider.')
-        return redirect(url_for('login'))
+    elif provider == 'facebook':
+        resp = facebook.authorized_response()
 
     if resp is None:
         flash('Sign in denied.')
@@ -72,6 +73,11 @@ def authorized():
         user_email = user_info.data['email']
         user_id = user_info.data['email']
         user_name = user_info.data['name']
+    elif provider == 'facebook':
+        user_info = facebook.get('me?fields=id,email,name')
+        user_email = user_info.data['email']
+        user_id = user_info.data['id']
+        user_name = user_info.data['name']
 
     # Check if user already exists, if it doesn't, create it.
     user = User.select().where(User.social_id == user_id)
@@ -88,9 +94,9 @@ def authorized():
 
 
 @app.route("/logout")
-@login_required
 def logout():
-    logout_user()
+    if current_user.is_authenticated:
+        logout_user()
     return redirect(url_for('login'))
 
 
@@ -108,6 +114,11 @@ def new_feed():
                 has_feed = True
 
         if not has_feed:
+            title = d['feed']['title']
+            description = d['feed']['description']
+            if description == '':
+                description = d['feed']['subtitle']
+
             Feed.create(url=url, title=d['feed']['title'],
                         description=d['feed']['description'],
                         user=current_user.id)
