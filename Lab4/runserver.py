@@ -43,47 +43,42 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/login/authorized_github')
-def authorized_github():
-    resp = github.authorized_response()
-    if resp is None:
-        return 'Access denied: reason=%s error=%s' % (
-            request.args['error'],
-            request.args['error_description']
-        )
-    session['github_token'] = (resp['access_token'], '')
-    me = github.get('user')
+@app.route('/login/authorized')
+def authorized():
+    provider = request.args.get('provider')
 
-    # Check if user already exists, if it doesn't, create it.
-    user = User.select().where(User.social_id == me.data['login'])
-    if len(user) == 0:
-        user = User.create(nickname=me.data['name'],
-                           social_id=me.data['login'])
+    if provider == 'github':
+        resp = github.authorized_response()
+    elif provider == 'google':
+        resp = google.authorized_response()
     else:
-        user = user[0]
+        flash('Invalid provider.')
+        return redirect(url_for('login'))
 
-    login_user(user, True)
-
-    return redirect(url_for('index'))
-
-
-@app.route('/login/authorized_google')
-def authorized_google():
-    resp = google.authorized_response()
     if resp is None:
-        return 'Access denied: reason=%s error=%s' % (
-            request.args['error'],
-            request.args['error_description']
-        )
-    session['google_token'] = (resp['access_token'], '')
-    me = google.get('userinfo')
+        flash('Sign in denied.')
+        return redirect(url_for('login'))
+
+    access_token = resp['access_token']
+    session['oauth_token'] = (access_token, '')
+
+    if provider == 'github':
+        user_info = github.get('/user')
+        user_email = github.get('/user/emails').data[0]['email']
+        user_id = user_info.data['login']
+        user_name = user_info.data['name']
+    elif provider == 'google':
+        user_info = google.get('userinfo')
+        user_email = user_info.data['email']
+        user_id = user_info.data['email']
+        user_name = user_info.data['name']
 
     # Check if user already exists, if it doesn't, create it.
-    user = User.select().where(User.social_id == me.data['email'])
+    user = User.select().where(User.social_id == user_id)
     if len(user) == 0:
-        user = User.create(nickname=me.data['name'],
-                           social_id=me.data['email'],
-                           email=me.data['email'])
+        user = User.create(nickname=user_name,
+                           social_id=user_id,
+                           email=user_email)
     else:
         user = user[0]
 

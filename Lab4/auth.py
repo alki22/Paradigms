@@ -45,12 +45,12 @@ github = oauth.remote_app(
 
 @github.tokengetter
 def get_github_token(token=None):
-    return session.get('github_token')
+    return session.get('oauth_token')
 
 
 def login_github():
     return github.authorize(
-        callback=url_for('authorized_github', _external=True))
+        callback=url_for('authorized', provider='github', _external=True))
 
 
 ## Google's OAuth
@@ -70,9 +70,9 @@ google = oauth.remote_app(
 
 @google.tokengetter
 def get_google_token(token=None):
-    return session.get('google_token')
+    return session.get('oauth_token')
 
 
 def login_google():
     return google.authorize(
-        callback=url_for('authorized_google', _external=True))
+        callback=url_for('authorized', provider='google', _external=True))
