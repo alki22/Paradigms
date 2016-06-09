@@ -1,15 +1,13 @@
-type card = string * int
+type card = { suit : suit; value: int }
 type deck = card list
 
-val deckFull : deck
+val deck_full : deck
 
-val deckGetSingleSpecificCard : deck -> int -> deck * card
+val deal_hand : deck -> deck ->  deck * deck
 
-(* Retirar solo un elemento del mazo, retorna la carata y el mazo sin la carta *)
-val deckGetSingleCard : deck -> deck * card
+val deck_take : deck -> int -> deck * deck
 
-(* Retirar N cartas del mazo, retorna las cartas en una lista y el mazo sin esas cartas *)
-val deckGetMultipleCards : deck -> int -> deck * deck
+val deck_take_single : deck -> card * deck
 
 (* Concatena dos decks *)
 val combineDecks : deck -> deck -> deck

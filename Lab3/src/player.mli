@@ -3,10 +3,10 @@ open Deck
 type player = { name : string; points : int; cards : deck; }
 
 (* Crea un nuevo jugador con un nombre *)
-val playerNew : string -> player
-
-(* Devuelve la mano del jugador en un mazo *)
-val playerHand : player -> deck
+val player_new : string -> player
 
 (* Se le da una carta al jugador *)
-val playerAdd : card -> player -> player
+val player_give_card : player -> deck -> player * deck
+
+(* Se le dan siete cartas al jugador*)
+val player_give_seven_cards : player -> deck -> player * deck
