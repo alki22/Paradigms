@@ -5,7 +5,7 @@ type round = player list
 
 let empty_round = ([]:round)
 
-(* Conseguimos los jugadores *)
+(* Generamos los jugadores *)
 (* Usamos List.rev para que se respete el orden en que entraron los jugadores *)
 let get_players () =
   let init_message =
@@ -24,7 +24,7 @@ let get_players () =
     else
       ((List.rev plays):round)
   in
-  get_players_rec empty_round 5
+  get_players_rec empty_round 5 
 
 let deal_round (players:round) (deck:deck) =
   let deal_round' players deck new_players =
