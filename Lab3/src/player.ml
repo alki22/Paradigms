@@ -7,7 +7,7 @@ let player_new (name : string) = {name = name; points = 0; cards = []; thrown = 
 
 let player_give_card (p:player) (deck:deck) =
   try
-    let card, deck = deck_take_single deck in
+    let card, deck = deck_draw_single deck in
     ({ name = p.name; points = p.points; cards = hand; played = p.played},
     deck)
 
