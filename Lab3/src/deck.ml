@@ -29,25 +29,24 @@ let deck_full =
 let deal_hand (hand:deck) (deck:deck) =
   match deck with
   | [] -> invalid_arg "Empty deck"
-  | xs -> let took, left = deck_take xs 7 in
+  | xs -> let took, left = deck_draw xs 7 in
       (hand @ took, left)
-
-
-(* Toma n cartas del maso principal *)
-let deck_take (deck:deck) (num:int) =
-  let rec deck_take' acc deck num = 
+    
+(* Toma n cartas del mazo principal *)
+let deck_draw (deck:deck) (num:int) =
+  let rec deck_draw' acc deck num = 
     if num = 0 then (acc, deck)
     else begin
-      let c = deck_take_single (deck:deck) in
+      let c = deck_draw_single (deck:deck) in
       let acc = (fst c) :: acc in
-      deck_take' acc (snd c) (num - 1)
+      deck_draw' acc (snd c) (num - 1)
     end
   in
-  deck_take' [] deck num
+  deck_draw' [] deck num
 
 (* Toma una carta del mazo dado *)
 (* Debería levantar excepción *)
-let deck_take_single (deck:deck) =
+let deck_draw_single (deck:deck) =
   let l = List.length deck in
   if l = 0 then
     raise EMPTY_DECK
@@ -76,3 +75,14 @@ let maxCard (card1 : card) (card2 : card) =
     else if (fst card2) = "B" then card2
     else if (fst card1) = "O" then card1
     else card2
+
+(* Devuelve todas las cartas pares del mazo *)    
+let getPairCards (deck:deck) = 
+    List.filter (fun x -> ((snd x) mod 2) = 0) deck
+
+(* Saca la carta de arriba del mazo *)
+let getTopCard (deck_deck) = 
+    deck_draw_single(deck)
+
+
+
