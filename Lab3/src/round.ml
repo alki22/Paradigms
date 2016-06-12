@@ -38,10 +38,41 @@ let deal_round (players:round) (deck:deck) =
   (players, deck)
 
 let play_round (players:round) (deck:deck) =
-  let play_round' players deck num =
+  let rec play_round' players deck players_after =
     match players with
-    | [] -> 
-    | x :: xs ->
-      if has_cards x then begin
-        player_play x deck
-      end
+    | [] -> (players, deck)
+    | x :: xs ->  if has_cards x then begin
+                    print_round_message round deck x
+                    let x, deck = player_play x deck in
+                    let players_after = x :: player_after in
+                    play_round' xs deck players_after
+                  end
+  in
+  let players, deck = play_round' players deck [] in
+  (*let players = List.rev players in*)
+  let players = decide_winner players in
+  (players, deck)
+
+
+(** Funciones para printear **)
+
+let print_round (round:round) =
+  print_endline "Ronda:";
+  let rec print_round_rec (r:round) = 
+    match r with
+    | [] -> ()
+    | x :: xs ->  print_player_played x;
+                  print_round_rec xs
+  in
+  print_round_rec round;
+
+let print_round_message (round:round) (deck:deck) (player:player) =
+  print_newline ();
+  print_string "Mazo: ";
+  print_int (deck_size deck);
+  print_endline " cartas";
+  print_round round;
+  player_print player;
+  print_string "Que carta vas a jugar ";
+  print_string player.name;
+  print_endline "?";

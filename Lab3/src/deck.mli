@@ -9,9 +9,6 @@ val deck_draw : deck -> int -> deck * deck
 
 val deck_draw_single : deck -> card * deck
 
-(* Concatena dos decks *)
-val combineDecks : deck -> deck -> deck
+val max_card : card -> card -> card
 
-val maxCard : card -> card -> card
-
-val getPairCards : deck -> deck
+val get_even_cards : deck -> deck
