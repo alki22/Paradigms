@@ -5,6 +5,34 @@ type round = player list
 
 let empty_round = ([]:round)
 
+let round_add_point (player:player) (players:round) =
+  let round_add_point' player players after =
+    match players with
+    | [] -> List.rev after
+    | p :: ps ->  match player = p with
+                  | true -> let player = player_add_point player in
+                            (List.rev after) @ (player :: ps)
+                  | false ->  let after = p :: after in
+                              round_add_point' player ps after
+  in
+  round_add_point' player players []
+
+let decide_winner (players:round) =
+  let decide_winner' x ys after =
+    match ys with
+    | [] -> x
+    | y :: ys ->  let cardx = List.nth x.played 0 in
+                  let cardy = List.nth y.played 0 in
+                  let card1, card2, b = sort_card cardx cardy in
+                  match b with
+                  | true -> (* cardx > cardy *) decide_winner' x ys
+                  | false -> (* cardx < cardy *) decide_winner' y ys
+  in
+  match players with
+  | x :: xs -> let winner = decide_winner' x xs in
+               round_add_point winner players
+
+
 (* Generamos los jugadores *)
 (* Usamos List.rev para que se respete el orden en que entraron los jugadores *)
 let get_players () =
@@ -26,7 +54,7 @@ let get_players () =
   in
   get_players_rec empty_round 5 
 
-let deal_round (players:round) (deck:deck) =
+let deck_deal (players:round) (deck:deck) =
   let deal_round' players deck new_players =
     match players with
     | [] -> (players, deck)
@@ -40,7 +68,7 @@ let deal_round (players:round) (deck:deck) =
 let play_round (players:round) (deck:deck) =
   let rec play_round' players deck players_after =
     match players with
-    | [] -> (players, deck)
+    | [] -> (List.rev players, deck)
     | x :: xs ->  if has_cards x then begin
                     print_round_message round deck x
                     let x, deck = player_play x deck in
@@ -49,7 +77,6 @@ let play_round (players:round) (deck:deck) =
                   end
   in
   let players, deck = play_round' players deck [] in
-  (*let players = List.rev players in*)
   let players = decide_winner players in
   (players, deck)
 

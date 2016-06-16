@@ -56,18 +56,41 @@ let deck_draw_single (deck:deck) =
 let deck_size (deck:deck) =
   List.length deck
 
-(* Devuelve la máxima carta *)
-let max_card (card1:card) (card2:card) =
-  if (snd card1) > (snd card2) then card1
-  else if (snd card1) < (snd card2) then card2
+(* Ordena las cartas, la primera es la mayor, la segunda la menor *)
+let sort_card (card1:card) (card2:card) =
+  if (snd card1) > (snd card2) then (card1, card2, true)
+  else if (snd card1) < (snd card2) then (card2, card1, false)
   else
     begin
-    if (fst card1) = "E" then card1
-    else if (fst card2) = "E" then card2
-    else if (fst card1) = "B" then card1
-    else if (fst card2) = "B" then card2
-    else if (fst card1) = "O" then card1
-    else card2
+    if (fst card1) = "E" then (card1, card2, true)
+    else if (fst card2) = "E" then (card2, card1, false)
+    else if (fst card1) = "B" then (card1, card2, true)
+    else if (fst card2) = "B" then (card2, card1, false)
+    else if (fst card1) = "O" then (card1, card2, true)
+    else (card2, card1, false)
+
+(* Devuelve la máxima carta *)
+let max_card (card1:card) (card2:card) =
+  let card1, card2, b = sort_card card1, card2 in
+  card1
+
+(* Devuelve la mínima carta *)
+let min_card (card1:card) (card2:card) =
+  let card1, card2, b = sort_card card1, card2 in
+  card2
+
+(* Devuelve la máxima carta del mazo, y el mazo sin la carta *)
+let deck_get (deck:deck) f =
+  match deck with
+  | [] -> 
+  | x :: xs ->  let deck_get' xs x =
+                  match xs with
+                  | [] -> x
+                  | y :: ys ->  let card = f x y in
+                                deck_get' ys card
+                in
+                let card = deck_get' xs x in
+                (card, List.filter (fun x -> x <> card) deck)
 
 let is_normal (card:card) =
   List.exists (fun s -> s = card.suit) normal_suits

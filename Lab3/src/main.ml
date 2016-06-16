@@ -8,8 +8,8 @@ let rec game_rec (players:round) (general:deck) =
   else print_positions new_ps
 
 let _ =
-  let round = get_players () in
-  let general = shuffle full_deck in
-  let players, aux_gen = initial_deal round general in
+  let players = get_players () in
+  (* let general = shuffle full_deck in *)
+  let players, aux_deck = deck_deal players deck_full in
   let new_gen, rest_gen = take 5 aux_gen in
   game_rec players new_gen

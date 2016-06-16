@@ -41,11 +41,38 @@ let play_special (card:card) (player:player) (deck:deck) =
                           played = player.played } in
             let deck = player_cards in
             (player, deck)
-  | MAX -> let max, deck = deck_max deck
-  | MIN -> let player_cards, deck = 
-  | TOP ->
-  | PAR ->
+  | MAX ->  let max, deck = deck_get deck max_card in
+            let player = { name = player.name;
+                          points = player.points;
+                          cards = max :: player.cards;
+                          played = player.played } in
+            (player, deck)
+  | MIN ->  let min, player_cards = deck_get player.cards min_card in
+            let deck = min :: deck in
+            let player = { name = player.name;
+                          points = player.points;
+                          cards = player_cards;
+                          played = player.played } in
+            (player, deck)
+  | TOP ->  let card, deck = deck_draw_single deck in
+            let player = { name = player.name;
+                          points = player.points;
+                          cards = card :: player.cards;
+                          played = player.played } in
+            (player, deck)
+  | PAR ->  let even, rest = get_even_cards deck in
+            let deck = rest in
+            let player = { name = player.name;
+                          points = player.points;
+                          cards = even @ player.cards;
+                          played = player.played } in
+            (player, deck)
 
+let player_add_point (player:player) =
+  { name = player.name;
+   points = player.points + 1;
+   cards = player.cards;
+   played = player.played }
 
 (* Pre: tiene al menos una carta*)
 let rec player_play (player:player) (deck:deck) =
@@ -60,7 +87,7 @@ let rec player_play (player:player) (deck:deck) =
             let player = { name = player.name;
                           points = player.points;
                           cards = player_cards;
-                          played = card :: player.played } in
+                          played = [card] } in
             match is_normal card with
             | true -> (player, deck)
             | false ->  let player, deck = play_special card player deck in
