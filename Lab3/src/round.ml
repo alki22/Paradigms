@@ -104,7 +104,7 @@ let get_players () =
 
 
 
-let deck_deal (players:round) (deck:deck) =
+let deck_deal_initial (players:round) (deck:deck) =
   let rec deal_round' players after deck =
     (match players with
     | [] -> (List.rev after, deck)

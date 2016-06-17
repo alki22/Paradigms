@@ -58,7 +58,7 @@ let play_special (card:card) (player:player) (deck:deck) =
   | MIN ->  let normal, special = List.partition (fun x -> x.value > 0) player.cards in
             let min, normal = deck_get normal min_card in
             let player_cards = normal @ special in
-            let deck = min :: deck in
+            let deck = deck @ [min] in
             let player = { name = player.name;
                           points = player.points;
                           cards = player_cards;

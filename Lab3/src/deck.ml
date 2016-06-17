@@ -29,8 +29,13 @@ let deck_size (deck:deck) =
   List.length deck
 
 (* Toma una carta del mazo dado *)
-(* Debería levantar excepción *)
 let deck_draw_single (deck:deck) =
+  match deck with
+  | [] -> failwith "Empty deck"
+  | x :: xs ->  (x, xs)
+
+(* Toma una carta aleatoria del mazo dado *)
+let deck_draw_single_rand (deck:deck) =
   let l = List.length deck in
   match l with
   | 0 ->  failwith "Empty deck"
@@ -38,7 +43,18 @@ let deck_draw_single (deck:deck) =
           let card = List.nth deck r in
           (card, List.filter (fun x -> x <> card) deck)
 
-(* Toma n cartas del mazo principal *)
+let deck_shuffle (deck:deck) =
+  let rec deck_shuffle' acc deck num =
+    match (num, deck_size deck) with
+    | (0, _) -> acc
+    | (_, 0) -> acc
+    | (_, _) -> let card, deck = deck_draw_single_rand deck in
+                let acc = card :: acc in
+                deck_shuffle' acc deck (num - 1)
+  in
+  deck_shuffle' [] deck (deck_size deck)
+
+(* Toma n cartas del mazo *)
 let deck_draw (deck:deck) (num:int) =
   let rec deck_draw' acc deck num = 
     match (num, deck_size deck) with
