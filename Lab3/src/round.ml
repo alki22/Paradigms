@@ -5,8 +5,7 @@ type round = player list
 
 let empty_round = ([]:round)
 
-(** Funciones para printear **)
-
+(* Printea las cartas jugadas por cada jugador *)
 let round_print (round:round) =
   print_endline "Ronda:";
   let rec round_print' (r:round) = 
@@ -17,6 +16,7 @@ let round_print (round:round) =
   in
   round_print' round
 
+(* Mensaje principal para cada jugador *)
 let round_print_message (round:round) (deck:deck) (player:player) =
   print_newline ();
   print_string "Mazo: ";
@@ -41,12 +41,12 @@ let print_positions (players:round) =
   let sort_players (players:round) = List.rev (List.sort player_order players) in
   print_all_position (sort_players players) 1
 
-(** Funciones generales **)
-
+(* Nos dice cuantos jugadores siguen jugando *)
 let player_num (players:round) =
   let with_cards = List.filter has_cards players in
   List.length with_cards
 
+(* Le da un punto al jugador dado *)
 let round_add_point (player:player) (players:round) =
   let rec round_add_point' player players after =
     match players with
@@ -59,6 +59,7 @@ let round_add_point (player:player) (players:round) =
   in
   round_add_point' player players []
 
+(* Decide quien es el jugador ganador de la ronda *)
 let decide_winner (players:round) =
   let rec decide_winner' p ps =
     (match ps with
@@ -103,7 +104,7 @@ let get_players () =
   get_players_rec empty_round 5
 
 
-
+(* Se reparten las siete cartas iniciales a cada jugador *)
 let deck_deal_initial (players:round) (deck:deck) =
   let rec deal_round' players after deck =
     (match players with
@@ -114,6 +115,7 @@ let deck_deal_initial (players:round) (deck:deck) =
   let players, deck = deal_round' players [] deck in
   (players, deck)
 
+(* Responsable de ejecutar la ronda per se, llama al resto de las funciones *)
 let play_round (players:round) (deck:deck) =
   let rec play_round' ps ps_after deck =
     (match ps with
