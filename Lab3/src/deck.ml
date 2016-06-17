@@ -25,6 +25,7 @@ let deck_full =
   List.map (fun suit -> {value = num; suit = suit}) normal_suits in
   specials @ (List.concat (List.map make_value_cards values))
 
+(* Devuelve el tamaño del mazo *)
 let deck_size (deck:deck) =
   List.length deck
 
@@ -43,6 +44,7 @@ let deck_draw_single_rand (deck:deck) =
           let card = List.nth deck r in
           (card, List.filter (fun x -> x <> card) deck)
 
+(* Mezcla el mazo *)
 let deck_shuffle (deck:deck) =
   let rec deck_shuffle' acc deck num =
     match (num, deck_size deck) with
@@ -140,8 +142,7 @@ let string_to_card c =
     | _ -> invalid_arg "No such card."
   with Failure "int_of_string" -> (print_endline "No es una carta valida!"; [])
 
-(** Funciones que printean **)
-
+(* Dada una carta, la printea para que el usuario la pueda leer *)
 let rec print_card (target:card) =
   match target.suit with
   | Espada -> print_char 'E'; print_int target.value
@@ -155,6 +156,7 @@ let rec print_card (target:card) =
   | TOP -> print_string "STOP"
   | PAR -> print_string "SPAR"
 
+(* Printea el mazo dado *)
 let rec print_deck (target:deck) =
   match target with
   | [] -> print_newline ()

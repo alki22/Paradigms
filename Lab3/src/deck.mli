@@ -7,6 +7,7 @@ val deck_full : deck
 
 (* Funciones *)
 val deck_draw_single : deck -> card * deck
+val deck_draw_single_rand : deck -> card * deck
 val deck_shuffle : deck -> deck
 val deck_draw : deck -> int -> deck * deck
 val deal_hand : deck -> deck ->  deck * deck
