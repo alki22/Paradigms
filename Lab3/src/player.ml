@@ -3,8 +3,10 @@ open Printf
 
 type player = { name : string; points : int; cards : deck; played : card list }
 
+(* Crea un nuevo jugador *)
 let player_new (name : string) = {name = name; points = 0; cards = []; played = [] }
 
+(* Le da una carta de arriba del mazo al jugador *)
 let player_give_card (p:player) (deck:deck) =
   if deck_size deck > 0 then begin
     let card, deck = deck_draw_single deck in
@@ -14,20 +16,23 @@ let player_give_card (p:player) (deck:deck) =
   else
     (p, deck)
 
-(* Repartimos 7 cartas del mazo principal al jugador *)
+(* Repartimos siete cartas del mazo principal al jugador *)
 let player_give_seven_cards (p:player) (deck:deck) =
   let hand, deck = deal_hand p.cards deck in
     ({ name = p.name; points = p.points; cards = hand; played= p.played},
     deck)
 
+(* Compara los jugadores basados en su puntaje *)
 let player_order (p:player) (q:player) =
   if p.points = q.points then 0 
   else if p.points > q.points then 1
   else -1
 
+(* Informa si el jugador tiene cartas para jugar *)
 let has_cards (player:player) =
   List.length player.cards > 0
 
+(* Informa si el jugador tiene la carta dada *)
 let has_card (player:player) (card:card) =
   let cards = List.filter (fun x -> x = card) player.cards in
   let len = List.length cards in
@@ -35,6 +40,7 @@ let has_card (player:player) (card:card) =
   | 0 -> false
   | _ -> true
 
+(* Hace las operaciones de cada carta especial *)
 let play_special (card:card) (player:player) (deck:deck) =
   match card.suit with 
   | ID -> (player, deck)
@@ -83,12 +89,14 @@ let play_special (card:card) (player:player) (deck:deck) =
             (player, deck)
   | _ -> failwith "Not expected suit"
 
+(* Agrega un punto al jugador dado *)
 let player_add_point (player:player) =
   { name = player.name;
    points = player.points + 1;
    cards = player.cards;
    played = player.played }
 
+(* Printea la información del jugador, para que luego juege *)
 let player_print (player:player) =
   print_string player.name;
   print_char '(';
@@ -97,6 +105,7 @@ let player_print (player:player) =
   print_string ": ";
   print_deck player.cards
 
+(* Función principal *)
 (* Pre: tiene al menos una carta*)
 let rec player_play (player:player) (deck:deck) =
   let input = read_line () in
@@ -154,7 +163,7 @@ let rec player_play (player:player) (deck:deck) =
   else
     player_play player deck
 
-
+(* Printea la carta jugada del jugador dado *)
 let player_print_played (player:player) =
   match player.played with
   | [] -> ()
@@ -162,6 +171,7 @@ let player_print_played (player:player) =
           print_string "  ";
           print_deck player.played
 
+(* Printea el nombre del jugador y su posición, junto con su puntuación *)
 let player_print_position (p:player) (a:int) =
   print_int a;
   print_string "   ";
