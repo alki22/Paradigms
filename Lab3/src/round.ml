@@ -22,7 +22,7 @@ let round_print_message (round:round) (deck:deck) (player:player) =
   print_string "Mazo: ";
   print_int (deck_size deck);
   print_endline " cartas";
-  round_print round;
+  round_print (List.rev round);
   player_print player;
   print_string "Que carta vas a jugar ";
   print_string player.name;
@@ -60,21 +60,24 @@ let round_add_point (player:player) (players:round) =
   round_add_point' player players []
 
 let decide_winner (players:round) =
-  let rec decide_winner' x ys =
-    match ys with
-    | [] -> x
-    | y :: ys ->  let cardx = List.nth x.played 0 in
+  let rec decide_winner' p ps =
+    (match ps with
+    | [] -> p
+    | y :: ys ->  let cardp = List.nth p.played 0 in
                   let cardy = List.nth y.played 0 in
-                  let card1, card2, b = sort_card cardx cardy in
+                  let card1, card2, b = sort_card cardp cardy in
                   match b with
-                  | true -> (* cardx > cardy *) decide_winner' x ys
-                  | false -> (* cardx < cardy *) decide_winner' y ys
+                  | true -> (* cardp > cardy *) decide_winner' p ys
+                  | false -> (* cardp < cardy *) decide_winner' y ys)
   in
   match players with
   | [] -> failwith "No players (?"
   | [x] -> round_add_point x [x]
-  | x :: xs -> let winner = decide_winner' x xs in
-               round_add_point winner players
+  | x :: xs ->  let winner = decide_winner' x xs in
+                print_string "El jugador ";
+                print_string winner.name;
+                print_endline " gano la ronda.";
+                round_add_point winner players
 
 
 (* Generamos los jugadores *)
@@ -99,35 +102,28 @@ let get_players () =
   in
   get_players_rec empty_round 5
 
-let rec deck_deal_aux players after deck =
-  match players with
-  | [] -> (List.rev after, deck)
-  | x :: xs ->  let x, deck = player_give_seven_cards x deck in
-                deck_deal_aux xs (x :: after) deck 
+
 
 let deck_deal (players:round) (deck:deck) =
-  (*let rec deal_round' players deck new_players =
+  let rec deal_round' players after deck =
     (match players with
-    | [] -> (List.rev new_players, deck)
+    | [] -> (List.rev after, deck)
     | x :: xs -> let x, deck = player_give_seven_cards x deck in
-                 deal_round' xs deck (x :: new_players))
-  in*)
-
-  (* let r = List.map (fun x -> player_give_seven_cards x deck) players *)
-
-  let players, deck = deck_deal_aux players deck [] in
+                 deal_round' xs (x :: after) deck)
+  in
+  let players, deck = deal_round' players [] deck in
   (players, deck)
 
 let play_round (players:round) (deck:deck) =
-  let rec play_round' players deck players_after =
-    (match players with
-    | [] -> (List.rev players, deck)
+  let rec play_round' ps ps_after deck =
+    (match ps with
+    | [] -> (List.rev ps_after, deck)
     | x :: xs ->  if has_cards x then
-                    round_print_message players deck x;
+                    round_print_message ps_after deck x;
                     let x, deck = player_play x deck in
-                    let players_after = x :: players_after in
-                    play_round' xs deck players_after)
+                    let ps_after = x :: ps_after in
+                    play_round' xs ps_after deck)
   in
-  let players, deck = play_round' players deck [] in
+  let players, deck = play_round' players [] deck in
   let players = decide_winner players in
   (players, deck)
