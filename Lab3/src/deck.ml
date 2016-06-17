@@ -25,6 +25,9 @@ let deck_full =
   List.map (fun suit -> {value = num; suit = suit}) normal_suits in
   specials @ (List.concat (List.map make_value_cards values))
 
+let deck_size (deck:deck) =
+  List.length deck
+
 (* Toma una carta del mazo dado *)
 (* Debería levantar excepción *)
 let deck_draw_single (deck:deck) =
@@ -38,23 +41,21 @@ let deck_draw_single (deck:deck) =
 (* Toma n cartas del mazo principal *)
 let deck_draw (deck:deck) (num:int) =
   let rec deck_draw' acc deck num = 
-    match num with
-    | 0 -> (acc, deck)
-    | _ ->  let c = deck_draw_single (deck:deck) in
-            let acc = (fst c) :: acc in
-            deck_draw' acc (snd c) (num - 1)
+    match (num, deck_size deck) with
+    | (0, _) -> (acc, deck)
+    | (_, 0) -> (acc, deck)
+    | (_, _) -> let card, deck = deck_draw_single deck in
+                let acc = card :: acc in
+                deck_draw' acc deck (num - 1)
   in
   deck_draw' [] deck num
 
 (* Repartir las cartas iniciales *)
 let deal_hand (hand:deck) (deck:deck) =
   match deck with
-  | [] -> invalid_arg "Empty deck"
+  | [] -> failwith "Empty deck"
   | xs -> let took, left = deck_draw xs 7 in
       (hand @ took, left)
-
-let deck_size (deck:deck) =
-  List.length deck
 
 (* Ordena las cartas, la primera es la mayor, la segunda la menor *)
 let sort_card (card1:card) (card2:card) =
@@ -99,7 +100,7 @@ let is_normal (card:card) =
 (* Separa las cartas pares, de las impares, del mazo *)    
 let get_even_cards (deck:deck) =
   let even = List.filter (fun x -> (x.value mod 2) = 0) deck in
-  let odd = List.filter (fun x -> (x.value mod 2) = 0) deck in
+  let odd = List.filter (fun x -> (x.value mod 2) <> 0) deck in
   (even, odd)
 
 (* Dado un string, parseamos una carta *)

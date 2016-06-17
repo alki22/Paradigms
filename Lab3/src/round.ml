@@ -30,7 +30,7 @@ let round_print_message (round:round) (deck:deck) (player:player) =
 
 (* Imprime todas las posiciones de una ronda *)
 let print_positions (players:round) =
-  print_string "GAME OVER. Posiciones:";
+  print_string "\nGAME OVER. Posiciones:";
   print_newline();
   let rec print_all_position (players:round) (a:int) =
     match players with
@@ -71,7 +71,7 @@ let decide_winner (players:round) =
                   | false -> (* cardp < cardy *) decide_winner' y ys)
   in
   match players with
-  | [] -> failwith "No players (?"
+  | [] -> failwith "No players!"
   | [x] -> round_add_point x [x]
   | x :: xs ->  let winner = decide_winner' x xs in
                 print_string "El jugador ";
