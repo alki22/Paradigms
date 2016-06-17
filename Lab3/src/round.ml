@@ -28,7 +28,7 @@ let round_print_message (round:round) (deck:deck) (player:player) =
   print_string player.name;
   print_endline "?"
 
-(* Imprime todas las posiciones de una ronda *)
+(* Imprime todas las posiciones de una ronda, en orden *)
 let print_positions (players:round) =
   print_string "\nGAME OVER. Posiciones:";
   print_newline();
